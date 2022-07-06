@@ -36,7 +36,7 @@ const createWindow = () => {
         callback({
             responseHeaders: {
                 ...details.responseHeaders,
-                "Content-Security-Policy": ["style-src 'self' *.jsdelivr.net;"],
+                "Content-Security-Policy": ["style-src 'self' *.jsdelivr.net 'unsafe-inline'; "],
             },
         });
     });
