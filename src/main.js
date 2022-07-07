@@ -1,5 +1,6 @@
 const { app, screen, BrowserWindow, session } = require("electron");
-const path = require("path");
+
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // eslint-disable-next-line global-require
@@ -22,6 +23,7 @@ const createWindow = () => {
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
             nodeIntegration: true,
+            contextIsolation: false,
         },
     });
     mainWindow.removeMenu();
