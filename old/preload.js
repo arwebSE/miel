@@ -1,5 +1,5 @@
 const { ipcRenderer } = require("electron");
-const { getCity } = require("./settings");
+const { getCity } = require("../src/settings");
 const config = require("../config.json");
 
 document.addEventListener("DOMContentLoaded", () => {
