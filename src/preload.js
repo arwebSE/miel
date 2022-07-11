@@ -17,6 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
         replaceText(`${dependency}-version`, process.versions[dependency]);
     }
 
+    const callAPI = async (city) => {
+        const response = await fetch(`${config.weatherURL}?q=${city}&appid=${config.apiKey}&units=metric`);
+        const result = await response.json();
+        console.log("callAPI", result);
+        console.log(`City: ${result.name} Temp: ${result.main.temp}`);
+        weatherEl.innerHTML = `City: ${result.name} Temp: ${result.main.temp}`;
+        tempEl.innerHTML = result.main.temp;
+    };
+
     // get city from store and replace input value
     const city = getCity();
     cityInput.value = city;
@@ -29,12 +38,3 @@ document.addEventListener("DOMContentLoaded", () => {
         if (cityInput.value) callAPI(cityInput.value);
     };
 });
-
-const callAPI = async (city) => {
-    const response = await fetch(`${config.weatherURL}?q=${city}&appid=${config.apiKey}&units=metric`);
-    const result = await response.json();
-    console.log("callAPI", result);
-    console.log(`City: ${result.name} Temp: ${result.main.temp}`);
-    weatherEl.innerHTML = `City: ${result.name} Temp: ${result.main.temp}`;
-    tempEl.innerHTML = result.main.temp;
-};
