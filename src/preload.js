@@ -18,10 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const callAPI = async (city) => {
-        const response = await fetch(`${config.weatherURL}?q=${city}&appid=${config.apiKey}&units=metric`);
+        const response = await fetch(`${config.weatherURL}?q=${city}&key=${config.apiKey}&aqi=no&alerts=no&days=7`);
         const result = await response.json();
         console.log("callAPI", result);
-        console.log(`City: ${result.name} Temp: ${result.main.temp}`);
+        console.log(`City: ${result.location.name} cTemp: ${result.current.temp_c}`);
         weatherEl.innerHTML = `City: ${result.name} Temp: ${result.main.temp}`;
         tempEl.innerHTML = result.main.temp;
     };

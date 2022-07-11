@@ -1,4 +1,6 @@
 {
-    "apiKey": "7376470552b81a83d88ad32677703074",
-    "weatherURL": "https://api.openweathermap.org/data/2.5/weather"
+    "oldApiKey": "7376470552b81a83d88ad32677703074",
+    "oldWeatherURL": "https://api.openweathermap.org/data/2.5/weather",
+    "weatherURL": "https://api.weatherapi.com/v1/forecast.json",
+    "apiKey": "dd918a45f15147e781b92846221107"
 }
