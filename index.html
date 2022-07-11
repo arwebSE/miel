@@ -1,14 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>miEl</title>
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" /> -->
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+        <div id="app">
+            <div id="current">
+                <div class="left row">
+                    <div class="col">
+                        <img src="./icons/34.png" />
+                    </div>
+                    <div class="col">
+                        <h4>Clear</h4>
+                        <h1 id="temp">23c</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <h5 id="city" class="read-the-docs">Södertälje</h5>
+                </div>
+                <div class="right col">
+                    <div class="row">
+                        <h5 class="left read-the-docs">Feels like</h5>
+                        <h5 class="right">14*C</h5>
+                    </div>
+                    <div class="row">
+                        <h5 class="left read-the-docs">Humidity</h5>
+                        <h5 class="right">69%</h5>
+                    </div>
+                </div>
+            </div>
+            <!-- <div id="forecast">
+                    <div class="left">
+                        <div class="day">
+                            <h3>Monday</h3>
+                            <img src="./icons/34.png" />
+                            <h4>23c</h4>
+                        </div>
+                        <div class="day">
+                            <h3>Tuesday</h3>
+                            <img src="./icons/35.png" />
+                            <h4>23c</h4>
+                        </div>
+                        <div class="day">
+                            <h3>Wednesday</h3>
+                            <img src="./icons/36.png" />
+                            <h4>23c</h4>
+                        </div>
+                        <div class="day">
+                            <h3>Thursday</h3>
+                            <img src="./icons/37.png" />
+                            <h4>23c</h4>
+                        </div>
+                        <div class="day">
+                            <h3>Friday</h3>
+                            <img src="./icons/38.png" />
+                            <h4>23c</h4>
+                        </div>
+                        <div class="day">
+                            <h3>Saturday</h3>
+                            <img src="./icons/39.png" />
+                            <h4>23c</h4>
+                        </div>
+                        <div class="day">
+                            <h3>Sunday</h3>
+                            <img src="./icons/40.png" />
+                            <h4>23c</h4>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div id="astro">
+                            <div id="sunrise">
+                                <h4>Sunrise</h4>
+                                <h5>03:53</h5>
+                            </div>
+                            <div id="sunset">
+                                <h4>Sunset</h4>
+                                <h5>21:55</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            <!-- <div class="card">
+                <button id="counter" type="button"></button>
+            </div> -->
+        </div>
+
+        <script type="module" src="/src/main.js"></script>
+    </body>
 </html>
