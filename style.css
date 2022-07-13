@@ -35,15 +35,6 @@ h1 {
     line-height: 1.1;
 }
 
-#app {
-    display: flex;
-    max-width: 1280px;
-    margin: 0 auto;
-    /* text-align: center; */
-    background-color: rgba(0, 128, 0, 0.479);
-    flex: 1;
-}
-
 .logo {
     height: 6em;
     padding: 1.5em;
@@ -96,6 +87,22 @@ button:focus-visible {
     }
 }
 
+#app {
+    display: flex;
+    max-width: 1280px;
+    margin: 0 auto;
+    text-align: center;
+    flex: 1;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-between;
+}
+
+.col {
+    flex-direction: column;
+    width: 100%;
+}
+
 .left {
     float: left;
 }
@@ -103,15 +110,68 @@ button:focus-visible {
     float: right;
 }
 
-.row {
-    justify-content: space-between;
-    background-color: rgba(49, 49, 196, 0.356);
+#row1 {
+    height: 200px;
+    background-color: red;
 }
-
-.col {
-    background-color: rgba(133, 40, 40, 0.253);
+#row2 {
+    background-color: blue;
 }
 
 #current {
+    width: 50%;
+    
+}
+
+#details {
+    width: 50%;
+}
+#details .row {
+    padding: 0 1em;
+}
+
+#forecast {
+    width: 70%;
+}
+
+#astro {
+    width: 30%;
+}
+#astro .row {
+    padding: 0 1em;
+}
+
+.day {
+    background-color: green;
+    width: 12%;
+}
+
+.day img {
+    width: 90%;
+}
+
+h1,
+h4,
+h5,
+h6 {
+    margin: initial;
+    padding: 0;
+}
+
+h6 {
+    line-height: 0.9rem;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-between;
     flex: 1;
+}
+
+.center {
+    align-self: center !important;
+    margin: auto !important;
+    text-align: center !important;
 }
