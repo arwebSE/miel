@@ -9,21 +9,23 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <div id="app">
-            <div id="current">
-                <div class="left row">
-                    <div class="col">
-                        <img src="./icons/34.png" />
+        <div id="app" class="">
+            <div class="row" id="row1">
+                <div id="current" class="col">
+                    <div class="row">
+                        <div class="center">
+                            <img src="./icons/34.png" />
+                        </div>
+                        <div class="center">
+                            <h4 id="condition">Clear</h4>
+                            <h1 id="temp">23&deg;C</h1>
+                        </div>
                     </div>
-                    <div class="col">
-                        <h4>Clear</h4>
-                        <h1 id="temp">23&deg;C</h1>
+                    <div class="row">
+                        <h5 id="city" class="center read-the-docs">Södertälje</h5>
                     </div>
                 </div>
-                <div class="row">
-                    <h5 id="city" class="read-the-docs">Södertälje</h5>
-                </div>
-                <div class="right col">
+                <div class="col" id="details">
                     <div class="row">
                         <h5 class="left read-the-docs">Feels like</h5>
                         <h5 class="right">14&deg;C</h5>
@@ -34,60 +36,65 @@
                     </div>
                 </div>
             </div>
-            <!-- <div id="forecast">
-                    <div class="left">
+            <div id="row2" class="row">
+                <div id="forecast" class="col">
+                    <div class="row">
                         <div class="day">
-                            <h3>Monday</h3>
+                            <h4>Mon</h4>
                             <img src="./icons/34.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                         <div class="day">
-                            <h3>Tuesday</h3>
+                            <h4>Tue</h4>
                             <img src="./icons/35.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                         <div class="day">
-                            <h3>Wednesday</h3>
+                            <h4>Wed</h4>
                             <img src="./icons/36.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                         <div class="day">
-                            <h3>Thursday</h3>
+                            <h4>Thu</h4>
                             <img src="./icons/37.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                         <div class="day">
-                            <h3>Friday</h3>
+                            <h4>Fri</h4>
                             <img src="./icons/38.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                         <div class="day">
-                            <h3>Saturday</h3>
+                            <h4>Sat</h4>
                             <img src="./icons/39.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                         <div class="day">
-                            <h3>Sunday</h3>
+                            <h4>Sun</h4>
                             <img src="./icons/40.png" />
-                            <h4>23c</h4>
+                            <h6>23&deg;C</h6>
+                            <h6>12&deg;C</h6>
                         </div>
                     </div>
-                    <div class="right">
-                        <div id="astro">
-                            <div id="sunrise">
-                                <h4>Sunrise</h4>
-                                <h5>03:53</h5>
-                            </div>
-                            <div id="sunset">
-                                <h4>Sunset</h4>
-                                <h5>21:55</h5>
-                            </div>
-                        </div>
+                </div>
+                <div id="astro" class="col">
+                    <div id="sunrise" class="row">
+                        <h4>Sunrise</h4>
+                        <h5>03:53</h5>
                     </div>
-                </div> -->
-            <!-- <div class="card">
-                <button id="counter" type="button"></button>
-            </div> -->
+                    <div id="sunset" class="row">
+                        <h4>Sunset</h4>
+                        <h5>21:55</h5>
+                    </div>
+                    <div id="updated" class="center">Updated 20:51</div>
+                </div>
+            </div>
         </div>
 
         <script type="module" src="/src/main.js"></script>
