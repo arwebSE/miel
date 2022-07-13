@@ -23,8 +23,8 @@ const createWindow = () => {
     const display = screen.getPrimaryDisplay();
     const dWidth = display.bounds.width;
     const dHeight = display.bounds.height;
-    const winWidth = 400 + 400;
-    const winHeight = 400;
+    const winWidth = 400 + 230;
+    const winHeight = 250;
 
     const win = new BrowserWindow({
         width: winWidth,

@@ -1,18 +1,8 @@
 :root {
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 400;
-
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+        "Open Sans", "Helvetica Neue", sans-serif;
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
 }
 
 a {
@@ -30,9 +20,32 @@ body {
     min-height: 100vh;
 }
 
+h1,
+h3,
+h4,
+h5,
+h6 {
+    margin: initial;
+    padding: 0;
+}
+
 h1 {
     font-size: 3.2em;
-    line-height: 1.1;
+    line-height: 1;
+    font-weight: 100;
+}
+
+h3 {
+    font-weight: 400;
+}
+
+h5 {
+    font-weight: 400;
+}
+
+h6 {
+    line-height: 1.4;
+    font-weight: 400;
 }
 
 .logo {
@@ -62,7 +75,7 @@ button {
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: #1a1a1a;
+    /* background-color: #1a1a1a; */
     cursor: pointer;
     transition: border-color 0.25s;
 }
@@ -98,68 +111,16 @@ button:focus-visible {
     justify-content: space-between;
 }
 
+.wrap {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 200px;
+}
+
 .col {
     flex-direction: column;
     width: 100%;
-}
-
-.left {
-    float: left;
-}
-.right {
-    float: right;
-}
-
-#row1 {
-    height: 200px;
-    background-color: red;
-}
-#row2 {
-    background-color: blue;
-}
-
-#current {
-    width: 50%;
-    
-}
-
-#details {
-    width: 50%;
-}
-#details .row {
-    padding: 0 1em;
-}
-
-#forecast {
-    width: 70%;
-}
-
-#astro {
-    width: 30%;
-}
-#astro .row {
-    padding: 0 1em;
-}
-
-.day {
-    background-color: green;
-    width: 12%;
-}
-
-.day img {
-    width: 90%;
-}
-
-h1,
-h4,
-h5,
-h6 {
-    margin: initial;
-    padding: 0;
-}
-
-h6 {
-    line-height: 0.9rem;
 }
 
 .row {
@@ -170,8 +131,72 @@ h6 {
     flex: 1;
 }
 
+#row1 {
+    height: 50%;
+    /* background-color: #333; */
+    padding: 5px 5px;
+    padding-bottom: 0;
+}
+#row2 {
+    /* background-color: blue; */
+    height: 50%;
+}
+
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+#current {
+    width: 60%;
+}
+#current img {
+    width: 90%;
+    padding: 5px;
+}
+
+#details {
+    width: 40%;
+    padding: 0.5em 1em;
+}
+
+#forecast {
+    width: 70%;
+    padding: 3px 5px;
+    align-items: center;
+}
+#forecast .row {
+    height: 100%;
+}
+.day {
+    /* background-color: green; */
+}
+.day img {
+    width: 90%;
+    padding: 7px 0;
+}
+.day h6:nth-of-type(2) {
+    color: darkgray;
+}
+
+#astro {
+    width: 30%;
+    padding: 3px 0.5em;
+    background-color: #646cff;
+    justify-content: space-between !important;
+    align-content: space-between !important;
+}
+#astro .row {
+    background-color: #333;
+}
+
+#updated {
+    background-color: #213547;
+}
+
 .center {
-    align-self: center !important;
     margin: auto !important;
     text-align: center !important;
 }
