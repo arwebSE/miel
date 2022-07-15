@@ -1,7 +1,10 @@
-import { join } from "path";
-import { app, BrowserWindow, ipcMain, screen } from "electron";
+const { join } = require("path");
+const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const AcrylicBW = require("electron-acrylic-window").BrowserWindow;
+const Store = require("electron-store");
+const store = new Store();
 
-export const ROOT_PATH = {
+const ROOT_PATH = {
     dist: join(__dirname, "../.."),
     public: join(__dirname, app.isPackaged ? "../.." : "../../../public"),
 };
@@ -40,12 +43,18 @@ const createWindow = () => {
             contextIsolation: false,
         },
         icon: join(ROOT_PATH.public, "logo.svg"),
-        transparent: true,
         frame: true,
         titleBarStyle: "hidden",
         titleBarOverlay: {
             color: "#111",
             symbolColor: "#3a82b3",
+        },
+        vibrancy: {
+            theme: "#00000044",
+            effect: "dark",
+            disableOnBlur: false,
+            maximumRefreshRate: 60,
+            useCustomWindowRefreshMethod: false,
         },
     };
 
@@ -54,7 +63,7 @@ const createWindow = () => {
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
     }
 
-    const win = new BrowserWindow(winConfig);
+    const win = new AcrylicBW(winConfig);
 
     // DevTools
     const devtools = new BrowserWindow();
@@ -102,11 +111,29 @@ app.on("activate", () => {
     }
 });
 
-/* ipcMain.on("saveCity", (_event, value) => {
+const getCity = () => {
+    const store = new Store();
+    const defaultCity = "Stockholm";
+    const city = store.get("city");
+
+    if (city) return city;
+    else {
+        store.set("city", defaultCity);
+        return defaultCity;
+    }
+};
+
+const setCity = (city) => {
+    if (city) store.set("city", city);
+    else console.log("city empty, not saving");
+};
+
+ipcMain.on("saveCity", (_event, value) => {
     const storedCity = getCity();
     console.log("Stored city:", storedCity);
+    console.log("Saving city:", value);
     if (value !== storedCity) {
         console.log("Saving city:", value);
         setCity(value);
     }
-}); */
+});

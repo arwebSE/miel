@@ -1,5 +1,8 @@
 require("dotenv").config();
 const { ipcRenderer } = require("electron");
+import Store from "electron-store";
+const store = new Store();
+
 const apiKey = process.env["API_KEY"];
 const apiUrl = process.env["API_URL"];
 
@@ -255,21 +258,40 @@ domReady().then(() => {
         console.log("Settings opened");
     };
 
+    const getCity = () => {
+        const defaultCity = "Stockholm";
+        const city = store.get("city");
+
+        if (city) return city;
+        else {
+            store.set("city", defaultCity);
+            return defaultCity;
+        }
+    };
+
     const setupSettings = () => {
         const settingsButton = document.getElementById("settings");
-        /* const { getCity } = require("./settings.js");
+        const cityInput = document.getElementById("cityInput");
+        const saveButton = document.getElementById("saveCity");
 
         const city = getCity();
-        cityInput.value = city; */
+        cityInput.value = city;
 
-        settingsButton.onclick = () => {
+        settingsButton.addEventListener("click", () => {
             toggleSettings();
-        };
+        });
+
+        saveButton.addEventListener("click", () => {
+            ipcRenderer.send("saveCity", cityInput.value);
+            console.log("saved button pressed");
+            callAPI(cityInput.value);
+            toggleSettings();
+        });
     };
 
     //const path = window.location.pathname;
     //const page = path.split("/").pop();
 
-    callAPI("Södertälje");
+    callAPI(getCity());
     setupSettings();
 });

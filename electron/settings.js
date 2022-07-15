@@ -1,7 +1,7 @@
 const Store = require("electron-store");
 const store = new Store();
 
-export const getCity = () => {
+const getCity = () => {
     const defaultCity = "Stockholm";
     const city = store.get("city");
 
@@ -12,7 +12,12 @@ export const getCity = () => {
     }
 };
 
-export const setCity = (city) => {
+const setCity = (city) => {
     if (city) store.set("city", city);
     else console.log("city empty, not saving");
+};
+
+module.exports = {
+    getCity,
+    setCity,
 };
