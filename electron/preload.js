@@ -99,6 +99,59 @@ setTimeout(removeLoading, 4999);
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
+    const getWeatherIcon = (icon) => {
+        const iconMap = {
+            1000: "113",
+            1003: "116",
+            1006: "119",
+            1009: "122",
+            1030: "143",
+            1063: "176",
+            1066: "179",
+            1069: "182",
+            1072: "185",
+            1087: "200",
+            1114: "227",
+            1117: "230",
+            1147: "260",
+            1150: "263",
+            1153: "266",
+            1168: "281",
+            1171: "284",
+            1180: "293",
+            1183: "296",
+            1186: "299",
+            1189: "302",
+            1192: "305",
+            1195: "308",
+            1198: "311",
+            1201: "314",
+            1204: "317",
+            1207: "320",
+            1210: "323",
+            1213: "326",
+            1216: "329",
+            1219: "332",
+            1222: "335",
+            1225: "338",
+            1237: "350",
+            1240: "353",
+            1243: "356",
+            1246: "359",
+            1249: "362",
+            1252: "365",
+            1255: "368",
+            1258: "371",
+            1261: "374",
+            1264: "377",
+            1273: "386",
+            1276: "389",
+            1279: "392",
+            1282: "395",
+        };
+        return iconMap[icon];
+    };
+
     const getDayName = (date = new Date(), locale = "en-US") => {
         return date.toLocaleDateString(locale, { weekday: "short" });
     };
@@ -111,8 +164,10 @@ domReady().then(() => {
         const cFeel = document.getElementById("feel");
         const cHumidity = document.getElementById("humidity");
         const updatedAt = document.getElementById("updatedAt");
+        const sunrise = document.getElementById("sunrise");
+        const sunset = document.getElementById("sunset");
 
-        const forecast = {};
+        const forecast = [];
         for (let index = 0; index < days; index++) {
             const dayObject = {};
             dayObject.dayEl = document.getElementsByClassName("day")[index];
@@ -120,27 +175,67 @@ domReady().then(() => {
             dayObject.hiTemp = document.getElementsByClassName("hiTemp")[index];
             dayObject.loTemp = document.getElementsByClassName("loTemp")[index];
             dayObject.dayName = document.getElementsByClassName("dayName")[index];
-            forecast[index] = dayObject;
+            forecast.push(dayObject);
         }
-        return { cTemp, cCondition, cCity, cIcon, cFeel, cHumidity, updatedAt, forecast };
+        return {
+            cTemp,
+            cCondition,
+            cCity,
+            cIcon,
+            cFeel,
+            cHumidity,
+            updatedAt,
+            sunrise,
+            sunset,
+            forecast,
+        };
+    };
+
+    const convert12to24 = (time12h) => {
+        const [time, modifier] = time12h.split(" ");
+        let [hours, minutes] = time.split(":");
+
+        if (hours === "12") hours = "00";
+        if (modifier === "PM") hours = parseInt(hours, 10) + 12;
+
+        return `${hours}:${minutes}`;
+    };
+
+    const isDay = (sunrise, sunset) => {
+        const now = new Date();
+        const sunriseTime = new Date();
+        const sunsetTime = new Date();
+        sunriseTime.setHours(convert12to24(sunrise).split(":")[0]);
+        sunriseTime.setMinutes(convert12to24(sunrise).split(":")[1]);
+        sunsetTime.setHours(convert12to24(sunset).split(":")[0]);
+        sunsetTime.setMinutes(convert12to24(sunset).split(":")[1]);
+        if (now >= sunriseTime && now <= sunsetTime) {
+            return "day";
+        } else return "night";
     };
 
     const setData = (result, el) => {
-        console.log("el", el);
         el.cTemp.innerHTML = result.current.temp_c;
         el.cCondition.innerHTML = result.current.condition.text;
         el.cIcon.src = result.current.condition.icon;
+        const sunrise = result.forecast.forecastday[0].astro.sunrise;
+        const sunset = result.forecast.forecastday[0].astro.sunset;
+        el.cIcon.src = `./icons/${isDay(sunrise, sunset)}/${getWeatherIcon(result.current.condition.code)}.png`;
         el.cCity.innerHTML = result.location.name;
         el.cFeel.innerHTML = result.current.feelslike_c;
         el.cHumidity.innerHTML = result.current.humidity;
         el.updatedAt.innerHTML = result.current.last_updated.split(" ")[1];
-        for (let index = 0; index < el.forecast.length; index++) {
-            console.log("el.forecast[index]", el.forecast[index]);
+        el.sunrise.innerHTML = convert12to24(sunrise);
+        el.sunset.innerHTML = convert12to24(sunset);
+        const days = result.forecast.forecastday.length;
+        console.log("Got " + days + " days of forecast");
+        for (let index = 0; index < days; index++) {
+            const fDay = result.forecast.forecastday[index];
             el.forecast[index].dayEl.style.display = "block";
-            el.forecast[index].fIcon.src = result.forecast.forecastday[index].day.condition.icon;
-            el.forecast[index].hiTemp.innerHTML = Math.round(result.forecast.forecastday[index].day.maxtemp_c);
-            el.forecast[index].loTemp.innerHTML = Math.round(result.forecast.forecastday[index].day.mintemp_c);
-            el.forecast[index].dayName.innerHTML = getDayName(new Date(result.forecast.forecastday[index].date));
+            el.forecast[index].fIcon.src = `./icons/day/${getWeatherIcon(fDay.day.condition.code)}.png`;
+            el.forecast[index].hiTemp.innerHTML = Math.round(fDay.day.maxtemp_c);
+            el.forecast[index].loTemp.innerHTML = Math.round(fDay.day.mintemp_c);
+            el.forecast[index].dayName.innerHTML = getDayName(new Date(fDay.date));
         }
     };
 
@@ -149,6 +244,32 @@ domReady().then(() => {
         const response = await fetch(`${apiUrl}?q=${city}&key=${apiKey}&aqi=no&alerts=no&days=${days}`);
         const result = await response.json();
         setData(result, getElements(days));
+        console.log("Got data", result);
     };
+
+    const toggleSettings = () => {
+        const popupEl = document.getElementById("popup");
+        const dState = popupEl.style.display;
+        if (dState === "block") popupEl.style.display = "none";
+        else popupEl.style.display = "block";
+        console.log("Settings opened");
+    };
+
+    const setupSettings = () => {
+        const settingsButton = document.getElementById("settings");
+        /* const { getCity } = require("./settings.js");
+
+        const city = getCity();
+        cityInput.value = city; */
+
+        settingsButton.onclick = () => {
+            toggleSettings();
+        };
+    };
+
+    //const path = window.location.pathname;
+    //const page = path.split("/").pop();
+
     callAPI("Södertälje");
+    setupSettings();
 });
