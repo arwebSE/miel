@@ -1,3 +1,6 @@
+const { ipcRenderer } = require("electron");
+const config = require("../config.json");
+
 function domReady(condition = ["complete", "interactive"]) {
     return new Promise((resolve) => {
         if (condition.includes(document.readyState)) {
@@ -91,9 +94,17 @@ window.onmessage = (ev) => {
 
 setTimeout(removeLoading, 4999);
 
-
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
-    console.log("domReady =))"); 
+    const cTemp = document.getElementById("temp");
+
+    const callAPI = async (city) => {
+        const response = await fetch(`${config.weatherURL}?q=${city}&key=${config.apiKey}&aqi=no&alerts=no&days=7`);
+        const result = await response.json();
+        console.log("callAPI", result);
+        console.log(`City: ${result.location.name} cTemp: ${result.current.temp_c}`);
+        cTemp.innerHTML = result.main.temp;
+    };
+    callAPI("Södertälje");
 });

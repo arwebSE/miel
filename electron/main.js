@@ -2,9 +2,7 @@ import { join } from "path";
 import { app, BrowserWindow, ipcMain, screen } from "electron";
 
 export const ROOT_PATH = {
-    // /dist
     dist: join(__dirname, "../.."),
-    // /dist or /public
     public: join(__dirname, app.isPackaged ? "../.." : "../../../public"),
 };
 
@@ -21,12 +19,16 @@ const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_D
 
 const createWindow = () => {
     const display = screen.getPrimaryDisplay();
+    const displays = screen.getAllDisplays();
+    const extDisplay = displays.find((display) => {
+        return display.bounds.x !== 0 || display.bounds.y !== 0;
+    });
     const dWidth = display.bounds.width;
     const dHeight = display.bounds.height;
-    const winWidth = 400 + 230;
-    const winHeight = 250;
+    const winWidth = 365;
+    const winHeight = 210;
 
-    const win = new BrowserWindow({
+    const winConfig = {
         width: winWidth,
         height: winHeight,
         x: dWidth - winWidth + 5,
@@ -38,11 +40,33 @@ const createWindow = () => {
             contextIsolation: false,
         },
         icon: join(ROOT_PATH.public, "logo.svg"),
-    });
+        transparent: true,
+        frame: true,
+        titleBarStyle: "hidden",
+        titleBarOverlay: {
+            color: "#111",
+            symbolColor: "#3a82b3",
+        },
+    };
+
+    if (extDisplay) {
+        winConfig.x = extDisplay.bounds.width - dWidth - 88;
+        winConfig.y = extDisplay.bounds.y + winHeight - 88;
+    }
+
+    const win = new BrowserWindow(winConfig);
+
+    // DevTools
+    const devtools = new BrowserWindow();
+    win.webContents.setDevToolsWebContents(devtools.webContents);
+    win.webContents.openDevTools({ mode: "detach" });
 
     // Test active push message to Renderer-process.
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", new Date().toLocaleString());
+        const winBounds = win.getBounds();
+        devtools.setPosition(winBounds.x - winBounds.width + 360, winBounds.y + winBounds.height);
+        devtools.setSize(winBounds.width * 2 + 10, winBounds.height * 2);
     });
 
     if (app.isPackaged) {
@@ -50,9 +74,6 @@ const createWindow = () => {
     } else {
         win.loadURL(url);
     }
-
-    // Open the DevTools.
-    win.webContents.openDevTools();
 
     /* session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
         callback({
@@ -88,4 +109,4 @@ ipcMain.on("saveCity", (_event, value) => {
         console.log("Saving city:", value);
         setCity(value);
     }
-})
+});
