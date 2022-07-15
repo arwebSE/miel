@@ -10,8 +10,14 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <div id="app" class="">
+        <div id="app">
+            <button id="settings" style="-webkit-app-region: no-drag"><i class="fa-solid fa-gear"></i></button>
+
             <div class="wrap">
+                <div id="popup" class="popup" style="display: none">
+                    <input type="text" id="cityInput" />
+                    <button class="button is-dark" id="saveCity">Save</button>
+                </div>
                 <div id="row1" class="row">
                     <div id="current" class="col">
                         <div class="row">
@@ -41,43 +47,43 @@
                 <div id="row2" class="row">
                     <div id="forecast" class="col">
                         <div class="row">
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/34.png" />
+                                <img class="fIcon" src="./icons/3200.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/35.png" />
+                                <img class="fIcon" src="./icons/3200.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/36.png" />
+                                <img class="fIcon" src="./icons/3200.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/37.png" />
+                                <img class="fIcon" src="./icons/3200.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/38.png" />
+                                <img class="fIcon" src="./icons/3200.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/39.png" />
+                                <img class="fIcon" src="./icons/3200.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day" style="display: none;">
+                            <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
                                 <img src="./icons/40.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
@@ -87,17 +93,17 @@
                     </div>
                     <div id="astro" class="col">
                         <div>
-                            <div id="sunrise" class="row">
+                            <div class="row">
                                 <h5>Sunrise</h5>
-                                <h6>03:53</h6>
+                                <h6 id="sunrise">?</h6>
                                 <div class="icons">
                                     <i class="fa-solid fa-sun fa-2xs"></i>
                                     <i class="fa-solid fa-arrow-up fa-2xs"></i>
                                 </div>
                             </div>
-                            <div id="sunset" class="row">
+                            <div class="row">
                                 <h5>Sunset</h5>
-                                <h6>21:55</h6>
+                                <h6 id="sunset">?</h6>
                                 <div class="icons">
                                     <i class="fa-solid fa-sun fa-2xs"></i>
                                     <i class="fa-solid fa-arrow-down fa-2xs"></i>

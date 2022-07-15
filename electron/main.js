@@ -102,11 +102,11 @@ app.on("activate", () => {
     }
 });
 
-ipcMain.on("saveCity", (_event, value) => {
+/* ipcMain.on("saveCity", (_event, value) => {
     const storedCity = getCity();
     console.log("Stored city:", storedCity);
     if (value !== storedCity) {
         console.log("Saving city:", value);
         setCity(value);
     }
-});
+}); */

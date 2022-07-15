@@ -13,6 +13,37 @@ body {
     -webkit-app-region: drag;
 }
 
+#settings {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    position: fixed;
+    top: 7px;
+    right: 140px;
+    width: 20px;
+    height: 20px;
+    z-index: 100;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    will-change: filter;
+    border: 2px solid transparent;
+    font-size: 1em;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+#settings i {
+    padding: auto;
+    margin: auto;
+}
+#settings:hover {
+    border-color: #346591;
+}
+#settings:focus,
+#settings:focus-visible {
+    outline: none;
+}
+
 h1,
 h3,
 h4,
@@ -76,22 +107,22 @@ a:hover {
     color: #888;
 }
 
-button {
+.button {
     border-radius: 8px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
+    padding: 0.2em 0.5em;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    /* background-color: #1a1a1a; */
+    background-color: #1a1a1a;
     cursor: pointer;
     transition: border-color 0.25s;
 }
-button:hover {
+.button:hover {
     border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
+.button:focus,
+.button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
@@ -141,12 +172,10 @@ button:focus-visible {
 
 #row1 {
     height: 50%;
-    /* background-color: #333; */
     padding: 5px 5px;
     padding-bottom: 0;
 }
 #row2 {
-    /* background-color: blue; */
     height: 50%;
 }
 
@@ -178,12 +207,9 @@ button:focus-visible {
 #forecast .row {
     height: 100%;
 }
-.day {
-    /* background-color: green; */
-}
 .day img {
-    width: 30px;
-    padding: 7px 0;
+    width: 35px;
+    padding: 7px 5px; /* 7px 0 */
 }
 .day h6:nth-of-type(2) {
     color: darkgray;
@@ -215,4 +241,15 @@ button:focus-visible {
 .center {
     margin: auto !important;
     text-align: center !important;
+}
+
+.popup {
+    width: 250px;
+    position: fixed;
+    top: 35px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 0.5em;
+    z-index: 100;
+    -webkit-app-region: no-drag;
 }

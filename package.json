@@ -12,7 +12,8 @@
     "build": "vite build && electron-builder"
   },
   "dependencies": {
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "electron-store": "^8.0.2"
   },
   "devDependencies": {
     "electron": "^19.0.6",
