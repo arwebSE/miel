@@ -3,8 +3,9 @@ const { ipcRenderer } = require("electron");
 import Store from "electron-store";
 const store = new Store();
 
-const apiKey = process.env["API_KEY"];
-const apiUrl = process.env["API_URL"];
+const apiKey = process.env["OW_KEY"];
+const apiUrl = process.env["OW_URL"];
+const geoUrl = process.env["GEO_URL"];
 
 function domReady(condition = ["complete", "interactive"]) {
     return new Promise((resolve) => {
@@ -152,7 +153,8 @@ domReady().then(() => {
             1279: "392",
             1282: "395",
         };
-        return iconMap[icon];
+
+        return IconMap[icon];
     };
 
     const getDayName = (date = new Date(), locale = "en-US") => {
@@ -166,6 +168,8 @@ domReady().then(() => {
         const cIcon = document.getElementById("cIcon");
         const cFeel = document.getElementById("feel");
         const cHumidity = document.getElementById("humidity");
+        const cMin = document.getElementById("cMin");
+        const cMax = document.getElementById("cMax");
         const updatedAt = document.getElementById("updatedAt");
         const sunrise = document.getElementById("sunrise");
         const sunset = document.getElementById("sunset");
@@ -187,6 +191,8 @@ domReady().then(() => {
             cIcon,
             cFeel,
             cHumidity,
+            cMin,
+            cMax,
             updatedAt,
             sunrise,
             sunset,
@@ -206,48 +212,50 @@ domReady().then(() => {
 
     const isDay = (sunrise, sunset) => {
         const now = new Date();
-        const sunriseTime = new Date();
-        const sunsetTime = new Date();
-        sunriseTime.setHours(convert12to24(sunrise).split(":")[0]);
-        sunriseTime.setMinutes(convert12to24(sunrise).split(":")[1]);
-        sunsetTime.setHours(convert12to24(sunset).split(":")[0]);
-        sunsetTime.setMinutes(convert12to24(sunset).split(":")[1]);
-        if (now >= sunriseTime && now <= sunsetTime) {
+        if (now >= sunrise && now <= sunset) {
             return "day";
         } else return "night";
     };
 
-    const setData = (result, el) => {
-        el.cTemp.innerHTML = result.current.temp_c;
-        el.cCondition.innerHTML = result.current.condition.text;
-        el.cIcon.src = result.current.condition.icon;
-        const sunrise = result.forecast.forecastday[0].astro.sunrise;
-        const sunset = result.forecast.forecastday[0].astro.sunset;
-        el.cIcon.src = `./icons/${isDay(sunrise, sunset)}/${getWeatherIcon(result.current.condition.code)}.png`;
-        el.cCity.innerHTML = result.location.name;
-        el.cFeel.innerHTML = result.current.feelslike_c;
-        el.cHumidity.innerHTML = result.current.humidity;
-        el.updatedAt.innerHTML = result.current.last_updated.split(" ")[1];
-        el.sunrise.innerHTML = convert12to24(sunrise);
-        el.sunset.innerHTML = convert12to24(sunset);
-        const days = result.forecast.forecastday.length;
-        console.log("Got " + days + " days of forecast");
-        for (let index = 0; index < days; index++) {
-            const fDay = result.forecast.forecastday[index];
+    const setData = (el, res, geo) => {
+        const sunrise = new Date(res.current.sunrise * 1000);
+        const sunset = new Date(res.current.sunset * 1000);
+        const updatedAt = new Date(res.current.dt * 1000);
+        el.cTemp.innerHTML = Math.round(res.current.temp);
+        el.cCondition.innerHTML = res.current.weather[0].main;
+        /* el.cIcon.src = `./icons/${isDay(sunrise, sunset)}/${getWeatherIcon(res.current.weather[0].id)}.png`; */
+        el.cIcon.src = `http://openweathermap.org/img/wn/${res.current.weather[0].icon}@2x.png`;
+        el.cCity.innerHTML = geo.name;
+        el.cFeel.innerHTML = res.current.feels_like;
+        el.cHumidity.innerHTML = res.current.humidity;
+        el.cMin.innerHTML = Math.round(res.daily[0].temp.min);
+        el.cMax.innerHTML = Math.round(res.daily[0].temp.max);
+        el.updatedAt.innerHTML = `${updatedAt.getHours()}:${updatedAt.getMinutes()}`;
+        el.sunrise.innerHTML = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
+        el.sunset.innerHTML = `${sunset.getHours()}:${sunset.getMinutes()}`;
+        const days = res.daily.length;
+        console.log("Got " + days + " days of forecast", res.daily);
+        for (let index = 0; index < 7; index++) {
+            const fDay = res.daily[index + 1];
             el.forecast[index].dayEl.style.display = "block";
-            el.forecast[index].fIcon.src = `./icons/day/${getWeatherIcon(fDay.day.condition.code)}.png`;
-            el.forecast[index].hiTemp.innerHTML = Math.round(fDay.day.maxtemp_c);
-            el.forecast[index].loTemp.innerHTML = Math.round(fDay.day.mintemp_c);
-            el.forecast[index].dayName.innerHTML = getDayName(new Date(fDay.date));
+            /* el.forecast[index].fIcon.src = `./icons/day/${getWeatherIcon(fDay.weather[0].id)}.png`; */
+            el.forecast[index].fIcon.src = `http://openweathermap.org/img/wn/${fDay.weather[0].icon}@2x.png`;
+            el.forecast[index].hiTemp.innerHTML = Math.round(fDay.temp.max);
+            el.forecast[index].loTemp.innerHTML = Math.round(fDay.temp.min);
+            el.forecast[index].dayName.innerHTML = getDayName(new Date(fDay.dt * 1000));
         }
     };
 
-    const callAPI = async (city) => {
-        const days = 7;
-        const response = await fetch(`${apiUrl}?q=${city}&key=${apiKey}&aqi=no&alerts=no&days=${days}`);
-        const result = await response.json();
-        setData(result, getElements(days));
-        console.log("Got data", result);
+    const getGeoData = async (city) => {
+        const geoResponse = await fetch(`${geoUrl}?q=${city}&appid=${apiKey}&limit=1`);
+        const geoResult = await geoResponse.json();
+        const data = {
+            lat: geoResult[0].lat,
+            lon: geoResult[0].lon,
+            name: `${geoResult[0].name}, ${geoResult[0].country}`,
+        };
+        console.log("Got geo", data);
+        return data;
     };
 
     const toggleSettings = () => {
@@ -287,6 +295,19 @@ domReady().then(() => {
             callAPI(cityInput.value);
             toggleSettings();
         });
+    };
+
+    const callAPI = async (city) => {
+        const geo = await getGeoData(city);
+        const days = 7;
+        const exclude = "hourly,minutely,alerts";
+        /* const response = await fetch(`${apiUrl}?q=${city}&key=${apiKey}&aqi=no&alerts=no&days=${days}`); */
+        const res = await fetch(
+            `${apiUrl}?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&exclude=${exclude}&units=metric`
+        );
+        const result = await res.json();
+        setData(getElements(days), result, geo);
+        console.log("Got data", result);
     };
 
     //const path = window.location.pathname;

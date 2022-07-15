@@ -18,15 +18,20 @@
                     <input type="text" id="cityInput" />
                     <button class="button is-dark" id="saveCity">Save</button>
                 </div>
+                <h5 id="updated"><i class="fa-solid fa-xs fa-arrows-rotate"></i> <span id="updatedAt"></span></h5>
                 <div id="row1" class="row">
                     <div id="current" class="col">
                         <div class="row">
                             <div class="center">
-                                <img id="cIcon" src="./icons/33.png" />
+                                <img id="cIcon" src="./icons/0.png" />
                             </div>
                             <div class="center">
                                 <h3 id="condition">Clear</h3>
                                 <h1><span id="temp"></span>&deg;C</h1>
+                            </div>
+                            <div class="vertical-center">
+                                <h6><i class="fa-solid fa-arrow-up"></i><span id="cMax">19</span>&deg;C</h6>
+                                <h6><i class="fa-solid fa-arrow-down"></i><span id="cMin">12</span>&deg;C</h6>
                             </div>
                         </div>
                         <div class="row">
@@ -42,6 +47,26 @@
                             <h5 class="left read-the-docs">Humidity</h5>
                             <h5 class="right"><span id="humidity"></span>%</h5>
                         </div>
+                        <div class="row">
+                            <h5 class="left read-the-docs">Sunrise</h5>
+                            <div>
+                                <div class="icons right">
+                                    <i class="fa-solid fa-sun fa-2xs"></i>
+                                    <i class="fa-solid fa-arrow-up fa-2xs"></i>
+                                </div>
+                                <h5 id="sunrise" class="right">?</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h5 class="left read-the-docs">Sunset</h5>
+                            <div>
+                                <div class="icons right">
+                                    <i class="fa-solid fa-sun fa-2xs"></i>
+                                    <i class="fa-solid fa-arrow-down fa-2xs"></i>
+                                </div>
+                                <h5 id="sunset" class="right">?</h5>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="row2" class="row">
@@ -49,70 +74,45 @@
                         <div class="row">
                             <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                             <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                             <div class="day" style="display: none">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                             <div class="day">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                             <div class="day">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                             <div class="day">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                             <div class="day">
                                 <h5 class="dayName"></h5>
-                                <img class="fIcon" src="./icons/3200.png" />
+                                <img class="fIcon" src="./icons/0.png" />
                                 <h6><span class="hiTemp"></span>&deg;</h6>
                                 <h6><span class="loTemp"></span>&deg;</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="astro" class="col">
-                        <div>
-                            <div class="row">
-                                <h5>Sunrise</h5>
-                                <h6 id="sunrise">?</h6>
-                                <div class="icons">
-                                    <i class="fa-solid fa-sun fa-2xs"></i>
-                                    <i class="fa-solid fa-arrow-up fa-2xs"></i>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <h5>Sunset</h5>
-                                <h6 id="sunset">?</h6>
-                                <div class="icons">
-                                    <i class="fa-solid fa-sun fa-2xs"></i>
-                                    <i class="fa-solid fa-arrow-down fa-2xs"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="center">
-                                <h5>Updated <span id="updatedAt"></span></h5>
                             </div>
                         </div>
                     </div>

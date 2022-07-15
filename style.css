@@ -190,19 +190,23 @@ a:hover {
     width: 60%;
 }
 #current img {
-    width: 80%;
-    padding: 5px;
+    height: 70px;
+    padding: 0;
+    margin: -10px;
+    margin-right: -30px;
 }
 
 #details {
     width: 40%;
-    padding: 2em 1em;
+    padding: 0.3em 0.5em;
+    margin-top: 1.5em;
 }
 
 #forecast {
-    width: 70%;
+    width: 85%;
     padding: 3px 5px;
     align-items: center;
+    margin: auto;
 }
 #forecast .row {
     height: 100%;
@@ -216,7 +220,7 @@ a:hover {
 }
 
 #astro {
-    width: 30%;
+    width: 0;
     padding: 3px 0.5em;
     display: flex;
     justify-content: space-between;
@@ -230,7 +234,21 @@ a:hover {
     margin-left: -3px;
 }
 
+.icons {
+    width: 20px;
+    height: 15px;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #updated {
+    position: fixed;
+    top: 1px;
+    left: 6px;
+    z-index: 99;
     text-align: center;
     margin: auto;
     color: darkgray;
@@ -239,6 +257,10 @@ a:hover {
 .center {
     margin: auto !important;
     text-align: center !important;
+}
+
+.vertical-center {
+    margin: auto 0 !important;
 }
 
 .popup {
