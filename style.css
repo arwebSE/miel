@@ -3,7 +3,7 @@
         "Open Sans", "Helvetica Neue", sans-serif;
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: transparent;
 }
 
 body {
@@ -224,8 +224,6 @@ a:hover {
 #astro h6,
 #astro h5 {
     align-self: center;
-}
-#astro h5 {
     color: darkgray;
 }
 #astro .icons i {

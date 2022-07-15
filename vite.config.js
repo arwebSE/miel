@@ -16,7 +16,6 @@ export default defineConfig({
                     // Must be use absolute path, this is the restrict of Rollup
                     preload: path.join(__dirname, "electron/preload.js"),
                 },
-
             },
             // Enables use of Node.js API in the Electron-Renderer
             renderer: {},
