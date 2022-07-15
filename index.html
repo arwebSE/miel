@@ -16,11 +16,11 @@
                     <div id="current" class="col">
                         <div class="row">
                             <div class="center">
-                                <img src="./icons/33.png" />
+                                <img id="cIcon" src="./icons/33.png" />
                             </div>
                             <div class="center">
                                 <h3 id="condition">Clear</h3>
-                                <h1 id="temp"></h1>
+                                <h1><span id="temp"></span>&deg;C</h1>
                             </div>
                         </div>
                         <div class="row">
@@ -30,58 +30,58 @@
                     <div class="col" id="details">
                         <div class="row">
                             <h5 class="left read-the-docs">Feels like</h5>
-                            <h5 class="right">14&deg;C</h5>
+                            <h5 class="right"><span id="feel"></span>&deg;C</h5>
                         </div>
                         <div class="row">
                             <h5 class="left read-the-docs">Humidity</h5>
-                            <h5 class="right">69%</h5>
+                            <h5 class="right"><span id="humidity"></span>%</h5>
                         </div>
                     </div>
                 </div>
                 <div id="row2" class="row">
                     <div id="forecast" class="col">
                         <div class="row">
-                            <div class="day">
-                                <h5>Mon</h5>
-                                <img src="./icons/34.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
+                                <img class="fIcon" src="./icons/34.png" />
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day">
-                                <h5>Tue</h5>
-                                <img src="./icons/35.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
+                                <img class="fIcon" src="./icons/35.png" />
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day">
-                                <h5>Wed</h5>
-                                <img src="./icons/36.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
+                                <img class="fIcon" src="./icons/36.png" />
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day">
-                                <h5>Thu</h5>
-                                <img src="./icons/37.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
+                                <img class="fIcon" src="./icons/37.png" />
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day">
-                                <h5>Fri</h5>
-                                <img src="./icons/38.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
+                                <img class="fIcon" src="./icons/38.png" />
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day">
-                                <h5>Sat</h5>
-                                <img src="./icons/39.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
+                                <img class="fIcon" src="./icons/39.png" />
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
-                            <div class="day">
-                                <h5>Sun</h5>
+                            <div class="day" style="display: none;">
+                                <h5 class="dayName"></h5>
                                 <img src="./icons/40.png" />
-                                <h6>23&deg;</h6>
-                                <h6>12&deg;</h6>
+                                <h6><span class="hiTemp"></span>&deg;</h6>
+                                <h6><span class="loTemp"></span>&deg;</h6>
                             </div>
                         </div>
                     </div>
@@ -105,8 +105,8 @@
                             </div>
                         </div>
                         <div>
-                            <div id="updated" class="center">
-                                <h5>Updated 20:51</h5>
+                            <div class="center">
+                                <h5>Updated <span id="updatedAt"></span></h5>
                             </div>
                         </div>
                     </div>
