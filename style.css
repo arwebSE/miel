@@ -182,7 +182,7 @@ button:focus-visible {
     /* background-color: green; */
 }
 .day img {
-    width: 75%;
+    width: 30px;
     padding: 7px 0;
 }
 .day h6:nth-of-type(2) {

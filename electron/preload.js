@@ -1,5 +1,7 @@
+require("dotenv").config();
 const { ipcRenderer } = require("electron");
-const config = require("../config.json");
+const apiKey = process.env["API_KEY"];
+const apiUrl = process.env["API_URL"];
 
 function domReady(condition = ["complete", "interactive"]) {
     return new Promise((resolve) => {
@@ -97,14 +99,56 @@ setTimeout(removeLoading, 4999);
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
-    const cTemp = document.getElementById("temp");
+    const getDayName = (date = new Date(), locale = "en-US") => {
+        return date.toLocaleDateString(locale, { weekday: "short" });
+    };
+
+    const getElements = (days) => {
+        const cTemp = document.getElementById("temp");
+        const cCondition = document.getElementById("condition");
+        const cCity = document.getElementById("city");
+        const cIcon = document.getElementById("cIcon");
+        const cFeel = document.getElementById("feel");
+        const cHumidity = document.getElementById("humidity");
+        const updatedAt = document.getElementById("updatedAt");
+
+        const forecast = {};
+        for (let index = 0; index < days; index++) {
+            const dayObject = {};
+            dayObject.dayEl = document.getElementsByClassName("day")[index];
+            dayObject.fIcon = document.getElementsByClassName("fIcon")[index];
+            dayObject.hiTemp = document.getElementsByClassName("hiTemp")[index];
+            dayObject.loTemp = document.getElementsByClassName("loTemp")[index];
+            dayObject.dayName = document.getElementsByClassName("dayName")[index];
+            forecast[index] = dayObject;
+        }
+        return { cTemp, cCondition, cCity, cIcon, cFeel, cHumidity, updatedAt, forecast };
+    };
+
+    const setData = (result, el) => {
+        console.log("el", el);
+        el.cTemp.innerHTML = result.current.temp_c;
+        el.cCondition.innerHTML = result.current.condition.text;
+        el.cIcon.src = result.current.condition.icon;
+        el.cCity.innerHTML = result.location.name;
+        el.cFeel.innerHTML = result.current.feelslike_c;
+        el.cHumidity.innerHTML = result.current.humidity;
+        el.updatedAt.innerHTML = result.current.last_updated.split(" ")[1];
+        for (let index = 0; index < el.forecast.length; index++) {
+            console.log("el.forecast[index]", el.forecast[index]);
+            el.forecast[index].dayEl.style.display = "block";
+            el.forecast[index].fIcon.src = result.forecast.forecastday[index].day.condition.icon;
+            el.forecast[index].hiTemp.innerHTML = Math.round(result.forecast.forecastday[index].day.maxtemp_c);
+            el.forecast[index].loTemp.innerHTML = Math.round(result.forecast.forecastday[index].day.mintemp_c);
+            el.forecast[index].dayName.innerHTML = getDayName(new Date(result.forecast.forecastday[index].date));
+        }
+    };
 
     const callAPI = async (city) => {
-        const response = await fetch(`${config.weatherURL}?q=${city}&key=${config.apiKey}&aqi=no&alerts=no&days=7`);
+        const days = 7;
+        const response = await fetch(`${apiUrl}?q=${city}&key=${apiKey}&aqi=no&alerts=no&days=${days}`);
         const result = await response.json();
-        console.log("callAPI", result);
-        console.log(`City: ${result.location.name} cTemp: ${result.current.temp_c}`);
-        cTemp.innerHTML = result.main.temp;
+        setData(result, getElements(days));
     };
     callAPI("Södertälje");
 });
