@@ -110,3 +110,15 @@ release
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+dist-ssr
+*.local
+
+# Editor directories and files
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

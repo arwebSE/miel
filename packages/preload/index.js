@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { ipcRenderer } = require("electron");
-import Store from "electron-store";
+const Store = require("electron-store");
 const store = new Store();
 
 const apiKey = process.env["OW_KEY"];
@@ -40,7 +40,7 @@ const safeDOM = {
  * https://projects.lukehaas.me/css-loaders
  * https://matejkustec.github.io/SpinThatShit
  */
-const useLoading = () => {
+function useLoading() {
     const className = `loaders-css__square-spin`;
     const styleContent = `
 @keyframes square-spin {
@@ -87,7 +87,7 @@ const useLoading = () => {
             safeDOM.remove(document.body, oDiv);
         },
     };
-};
+}
 
 // ----------------------------------------------------------------------
 

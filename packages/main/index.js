@@ -1,26 +1,32 @@
+const os = require("os");
 const { join } = require("path");
 const { app, BrowserWindow, ipcMain, screen } = require("electron");
 const AcrylicBW = require("electron-acrylic-window").BrowserWindow;
 const Store = require("electron-store");
 const store = new Store();
 
+const isWin7 = os.release().startsWith("6.1");
+if (isWin7) app.disableHardwareAcceleration();
+
+process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+
+if (!app.requestSingleInstanceLock()) {
+    app.quit();
+    process.exit(0);
+}
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling.
+// eslint-disable-next-line global-require
+if (require("electron-squirrel-startup")) app.quit();
+
 const ROOT_PATH = {
     dist: join(__dirname, "../.."),
     public: join(__dirname, app.isPackaged ? "../.." : "../../../public"),
 };
 
-process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
+let win = null;
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// eslint-disable-next-line global-require
-/* if (require("electron-squirrel-startup")) {
-    app.quit();
-} */
-
-// 🚧 Use ['ENV_NAME'] avoid vite:define plugin
-const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
-
-const createWindow = () => {
+const createWindow = async () => {
     const display = screen.getPrimaryDisplay();
     /* const displays = screen.getAllDisplays();
     const extDisplay = displays.find((display) => {
@@ -32,18 +38,23 @@ const createWindow = () => {
     const winHeight = 210;
 
     const winConfig = {
+        title: "Main window",
         width: winWidth,
         height: winHeight,
         x: dWidth - winWidth,
         y: dHeight - winHeight - 40,
-        autoHideMenuBar: true,
+
         webPreferences: {
-            preload: join(__dirname, "./preload.js"),
-            nodeIntegration: true,
+            preload: join(__dirname, "../preload/index.cjs"),
             contextIsolation: false,
+            nodeIntegration: true,
         },
         icon: join(ROOT_PATH.public, "logo.svg"),
+        autoHideMenuBar: true,
         frame: true,
+        resizable: false,
+        /* transparent: true,
+        backgroundColor: "#00000001", */
         titleBarStyle: "hidden",
         titleBarOverlay: {
             color: "#111",
@@ -63,15 +74,14 @@ const createWindow = () => {
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
     } */
 
-    const win = new AcrylicBW(winConfig);
+    win = new AcrylicBW(winConfig);
 
     // DevTools
-    //const devtools = new BrowserWindow();
-    //win.webContents.setDevToolsWebContents(devtools.webContents);
-    //win.webContents.openDevTools({ mode: "detach" });
+    const devtools = new BrowserWindow();
+    win.webContents.setDevToolsWebContents(devtools.webContents);
+    win.webContents.openDevTools({ mode: "detach" });
 
-    // Test active push message to Renderer-process.
-
+    // Test actively push message to the Electron-Renderer
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", new Date().toLocaleString());
         //const winBounds = win.getBounds();
@@ -80,9 +90,11 @@ const createWindow = () => {
     });
 
     if (app.isPackaged) {
-        win.loadFile(join(ROOT_PATH.dist, "index.html"));
+        win.loadFile(join(__dirname, "../renderer/index.html"));
     } else {
+        const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
         win.loadURL(url);
+        // win.webContents.openDevTools({ mode: 'undocked' })
     }
 
     /* session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -95,19 +107,28 @@ const createWindow = () => {
     }); */
 };
 
-// This method will be called when Electron has finished init
-app.on("ready", createWindow);
+app.whenReady().then(createWindow);
 
-// Quit when all windows are closed, except on macOS.
 app.on("window-all-closed", () => {
+    win = null;
     if (process.platform !== "darwin") {
         app.quit();
     }
 });
 
-// macOS fix
+app.on("second-instance", () => {
+    if (win) {
+        // Focus on the main window if the user tried to open another
+        if (win.isMinimized()) win.restore();
+        win.focus();
+    }
+});
+
 app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    const allWindows = BrowserWindow.getAllWindows();
+    if (allWindows.length) {
+        allWindows[0].focus();
+    } else {
         createWindow();
     }
 });
