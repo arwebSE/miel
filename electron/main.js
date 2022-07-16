@@ -22,10 +22,10 @@ const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_D
 
 const createWindow = () => {
     const display = screen.getPrimaryDisplay();
-    const displays = screen.getAllDisplays();
+    /* const displays = screen.getAllDisplays();
     const extDisplay = displays.find((display) => {
         return display.bounds.x !== 0 || display.bounds.y !== 0;
-    });
+    }); */
     const dWidth = display.bounds.width;
     const dHeight = display.bounds.height;
     const winWidth = 365;
@@ -34,8 +34,8 @@ const createWindow = () => {
     const winConfig = {
         width: winWidth,
         height: winHeight,
-        x: dWidth - winWidth + 5,
-        y: dHeight - winHeight - 35,
+        x: dWidth - winWidth,
+        y: dHeight - winHeight - 40,
         autoHideMenuBar: true,
         webPreferences: {
             preload: join(__dirname, "./preload.js"),
@@ -58,24 +58,25 @@ const createWindow = () => {
         },
     };
 
-    if (extDisplay) {
+    /* if (extDisplay) {
         winConfig.x = extDisplay.bounds.width - dWidth - 88;
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
-    }
+    } */
 
     const win = new AcrylicBW(winConfig);
 
     // DevTools
-    const devtools = new BrowserWindow();
-    win.webContents.setDevToolsWebContents(devtools.webContents);
-    win.webContents.openDevTools({ mode: "detach" });
+    //const devtools = new BrowserWindow();
+    //win.webContents.setDevToolsWebContents(devtools.webContents);
+    //win.webContents.openDevTools({ mode: "detach" });
 
     // Test active push message to Renderer-process.
+
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", new Date().toLocaleString());
-        const winBounds = win.getBounds();
-        devtools.setPosition(winBounds.x - winBounds.width + 360, winBounds.y + winBounds.height);
-        devtools.setSize(winBounds.width * 2 + 10, winBounds.height * 2);
+        //const winBounds = win.getBounds();
+        //devtools.setPosition(winBounds.x - winBounds.width + 360, winBounds.y + winBounds.height);
+        //devtools.setSize(winBounds.width * 2 + 10, winBounds.height * 2);
     });
 
     if (app.isPackaged) {

@@ -7,7 +7,7 @@ const apiKey = process.env["OW_KEY"];
 const apiUrl = process.env["OW_URL"];
 const geoUrl = process.env["GEO_URL"];
 
-function domReady(condition = ["complete", "interactive"]) {
+const domReady = (condition = ["complete", "interactive"]) => {
     return new Promise((resolve) => {
         if (condition.includes(document.readyState)) {
             resolve(true);
@@ -19,7 +19,7 @@ function domReady(condition = ["complete", "interactive"]) {
             });
         }
     });
-}
+};
 
 const safeDOM = {
     append(parent, child) {
@@ -40,7 +40,7 @@ const safeDOM = {
  * https://projects.lukehaas.me/css-loaders
  * https://matejkustec.github.io/SpinThatShit
  */
-function useLoading() {
+const useLoading = () => {
     const className = `loaders-css__square-spin`;
     const styleContent = `
 @keyframes square-spin {
@@ -87,7 +87,7 @@ function useLoading() {
             safeDOM.remove(document.body, oDiv);
         },
     };
-}
+};
 
 // ----------------------------------------------------------------------
 
@@ -103,60 +103,6 @@ setTimeout(removeLoading, 4999);
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
-    const getWeatherIcon = (icon) => {
-        const iconMap = {
-            1000: "113",
-            1003: "116",
-            1006: "119",
-            1009: "122",
-            1030: "143",
-            1063: "176",
-            1066: "179",
-            1069: "182",
-            1072: "185",
-            1087: "200",
-            1114: "227",
-            1117: "230",
-            1147: "260",
-            1150: "263",
-            1153: "266",
-            1168: "281",
-            1171: "284",
-            1180: "293",
-            1183: "296",
-            1186: "299",
-            1189: "302",
-            1192: "305",
-            1195: "308",
-            1198: "311",
-            1201: "314",
-            1204: "317",
-            1207: "320",
-            1210: "323",
-            1213: "326",
-            1216: "329",
-            1219: "332",
-            1222: "335",
-            1225: "338",
-            1237: "350",
-            1240: "353",
-            1243: "356",
-            1246: "359",
-            1249: "362",
-            1252: "365",
-            1255: "368",
-            1258: "371",
-            1261: "374",
-            1264: "377",
-            1273: "386",
-            1276: "389",
-            1279: "392",
-            1282: "395",
-        };
-
-        return IconMap[icon];
-    };
-
     const getDayName = (date = new Date(), locale = "en-US") => {
         return date.toLocaleDateString(locale, { weekday: "short" });
     };
@@ -200,45 +146,28 @@ domReady().then(() => {
         };
     };
 
-    const convert12to24 = (time12h) => {
-        const [time, modifier] = time12h.split(" ");
-        let [hours, minutes] = time.split(":");
-
-        if (hours === "12") hours = "00";
-        if (modifier === "PM") hours = parseInt(hours, 10) + 12;
-
-        return `${hours}:${minutes}`;
-    };
-
-    const isDay = (sunrise, sunset) => {
-        const now = new Date();
-        if (now >= sunrise && now <= sunset) {
-            return "day";
-        } else return "night";
-    };
-
     const setData = (el, res, geo) => {
         const sunrise = new Date(res.current.sunrise * 1000);
         const sunset = new Date(res.current.sunset * 1000);
         const updatedAt = new Date(res.current.dt * 1000);
+        const days = res.daily.length;
+
         el.cTemp.innerHTML = Math.round(res.current.temp);
         el.cCondition.innerHTML = res.current.weather[0].main;
-        /* el.cIcon.src = `./icons/${isDay(sunrise, sunset)}/${getWeatherIcon(res.current.weather[0].id)}.png`; */
         el.cIcon.src = `http://openweathermap.org/img/wn/${res.current.weather[0].icon}@2x.png`;
         el.cCity.innerHTML = geo.name;
-        el.cFeel.innerHTML = res.current.feels_like;
+        el.cFeel.innerHTML = Math.round(res.current.feels_like);
         el.cHumidity.innerHTML = res.current.humidity;
         el.cMin.innerHTML = Math.round(res.daily[0].temp.min);
         el.cMax.innerHTML = Math.round(res.daily[0].temp.max);
         el.updatedAt.innerHTML = `${updatedAt.getHours()}:${updatedAt.getMinutes()}`;
         el.sunrise.innerHTML = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
         el.sunset.innerHTML = `${sunset.getHours()}:${sunset.getMinutes()}`;
-        const days = res.daily.length;
+
         console.log("Got " + days + " days of forecast", res.daily);
         for (let index = 0; index < 7; index++) {
             const fDay = res.daily[index + 1];
             el.forecast[index].dayEl.style.display = "block";
-            /* el.forecast[index].fIcon.src = `./icons/day/${getWeatherIcon(fDay.weather[0].id)}.png`; */
             el.forecast[index].fIcon.src = `http://openweathermap.org/img/wn/${fDay.weather[0].icon}@2x.png`;
             el.forecast[index].hiTemp.innerHTML = Math.round(fDay.temp.max);
             el.forecast[index].loTemp.innerHTML = Math.round(fDay.temp.min);
@@ -301,7 +230,6 @@ domReady().then(() => {
         const geo = await getGeoData(city);
         const days = 7;
         const exclude = "hourly,minutely,alerts";
-        /* const response = await fetch(`${apiUrl}?q=${city}&key=${apiKey}&aqi=no&alerts=no&days=${days}`); */
         const res = await fetch(
             `${apiUrl}?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&exclude=${exclude}&units=metric`
         );
@@ -309,9 +237,6 @@ domReady().then(() => {
         setData(getElements(days), result, geo);
         console.log("Got data", result);
     };
-
-    //const path = window.location.pathname;
-    //const page = path.split("/").pop();
 
     callAPI(getCity());
     setupSettings();
