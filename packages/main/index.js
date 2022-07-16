@@ -1,6 +1,6 @@
 const os = require("os");
 const { join } = require("path");
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
 const AcrylicBW = require("electron-acrylic-window").BrowserWindow;
 const Store = require("electron-store");
 const store = new Store();
@@ -101,7 +101,7 @@ const createWindow = async () => {
         callback({
             responseHeaders: {
                 ...details.responseHeaders,
-                "Content-Security-Policy": ["style-src 'self' *.jsdelivr.net 'unsafe-inline'; "],
+                "Content-Security-Policy": ["style-src 'self' *.cloudflare.com 'unsafe-inline'; script-src 'self' localho.st 'unsafe-inline' 'unsafe-eval';"],
             },
         });
     }); */
