@@ -77,9 +77,9 @@ const createWindow = async () => {
     win = new AcrylicBW(winConfig);
 
     // DevTools
-    const devtools = new BrowserWindow();
+    /* const devtools = new BrowserWindow();
     win.webContents.setDevToolsWebContents(devtools.webContents);
-    win.webContents.openDevTools({ mode: "detach" });
+    win.webContents.openDevTools({ mode: "detach" }); */
 
     // Test actively push message to the Electron-Renderer
     win.webContents.on("did-finish-load", () => {
