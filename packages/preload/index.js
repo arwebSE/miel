@@ -3,9 +3,7 @@ const { ipcRenderer } = require("electron");
 const Store = require("electron-store");
 const store = new Store();
 
-const apiKey = process.env["OW_KEY"];
-const apiUrl = process.env["OW_URL"];
-const geoUrl = process.env["GEO_URL"];
+const apiUrl = "http://localhost:1337";
 
 const domReady = (condition = ["complete", "interactive"]) => {
     return new Promise((resolve) => {
@@ -146,7 +144,7 @@ domReady().then(() => {
         };
     };
 
-    const setData = (el, res, geo) => {
+    const setData = (el, res) => {
         const sunrise = new Date(res.current.sunrise * 1000);
         const sunset = new Date(res.current.sunset * 1000);
         const updatedAt = new Date(res.current.dt * 1000);
@@ -155,7 +153,7 @@ domReady().then(() => {
         el.cTemp.innerHTML = Math.round(res.current.temp);
         el.cCondition.innerHTML = res.current.weather[0].main;
         el.cIcon.src = `http://openweathermap.org/img/wn/${res.current.weather[0].icon}@2x.png`;
-        el.cCity.innerHTML = geo.name;
+        el.cCity.innerHTML = res.geo.name;
         el.cFeel.innerHTML = Math.round(res.current.feels_like);
         el.cHumidity.innerHTML = res.current.humidity;
         el.cMin.innerHTML = Math.round(res.daily[0].temp.min);
@@ -173,18 +171,6 @@ domReady().then(() => {
             el.forecast[index].loTemp.innerHTML = Math.round(fDay.temp.min);
             el.forecast[index].dayName.innerHTML = getDayName(new Date(fDay.dt * 1000));
         }
-    };
-
-    const getGeoData = async (city) => {
-        const geoResponse = await fetch(`${geoUrl}?q=${city}&appid=${apiKey}&limit=1`);
-        const geoResult = await geoResponse.json();
-        const data = {
-            lat: geoResult[0].lat,
-            lon: geoResult[0].lon,
-            name: `${geoResult[0].name}, ${geoResult[0].country}`,
-        };
-        console.log("Got geo", data);
-        return data;
     };
 
     const toggleSettings = () => {
@@ -227,14 +213,11 @@ domReady().then(() => {
     };
 
     const callAPI = async (city) => {
-        const geo = await getGeoData(city);
+        console.log("Calling API for " + city);
         const days = 7;
-        const exclude = "hourly,minutely,alerts";
-        const res = await fetch(
-            `${apiUrl}?lat=${geo.lat}&lon=${geo.lon}&appid=${apiKey}&exclude=${exclude}&units=metric`
-        );
+        const res = await fetch(`${apiUrl}/weather?q=${city}`);
         const result = await res.json();
-        setData(getElements(days), result, geo);
+        setData(getElements(days), result);
         console.log("Got data", result);
     };
 
