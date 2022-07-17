@@ -3,7 +3,7 @@ const { ipcRenderer } = require("electron");
 const Store = require("electron-store");
 const store = new Store();
 
-const apiUrl = "http://localhost:1337";
+const apiUrl = "https://miel-api.arwebse.repl.co";
 
 const domReady = (condition = ["complete", "interactive"]) => {
     return new Promise((resolve) => {
