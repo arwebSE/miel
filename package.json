@@ -15,7 +15,6 @@
         "build": "node scripts/build.mjs && electron-builder"
     },
     "dependencies": {
-        "dotenv": "^16.0.1",
         "electron-acrylic-window": "^0.5.11",
         "electron-store": "^8.0.2"
     },
