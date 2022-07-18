@@ -228,7 +228,7 @@ domReady().then(() => {
             timeConsole("Refreshing...");
             callAPI(getCity());
         };
-        setInterval(refresh, 1000 * 60 * 1);
+        setInterval(refresh, 1000 * 60 * 60);
     };
 
     const timeConsole = (...args) => {
