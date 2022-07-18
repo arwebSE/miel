@@ -187,7 +187,6 @@ domReady().then(() => {
     };
 
     const getSettings = () => {
-        const store = new Store();
         const settings = store.get("settings");
 
         if (settings) return settings;
@@ -238,9 +237,8 @@ domReady().then(() => {
     const callAPI = async (city) => {
         timeConsole("Calling API for " + city);
         const days = 7;
-        const verify = "b2d100b565620e1b1765";
+        const verify = process.env.VERIFY;
         const freedom = getSettings().freedom;
-        console.log("fetching", city, freedom);
         const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}`);
         const result = await res.json();
         setData(getElements(days), result);
