@@ -1,10 +1,10 @@
 {
     "name": "miEl",
     "version": "1.0.0",
-    "description": "A desktop weather widget",
+    "description": "A beautiful desktop weather widget",
     "main": "dist/main/index.cjs",
     "repository": "https://github.com/arwebSE/miel.git",
-    "author": "August M R",
+    "author": "ARWeb",
     "license": "MIT",
     "private": true,
     "engines": {

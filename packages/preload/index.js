@@ -101,10 +101,6 @@ setTimeout(removeLoading, 4999);
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
-    const getDayName = (date = new Date(), locale = "en-US") => {
-        return date.toLocaleDateString(locale, { weekday: "short" });
-    };
-
     const getElements = (days) => {
         const cTemp = document.getElementById("temp");
         const cCondition = document.getElementById("condition");
@@ -144,6 +140,8 @@ domReady().then(() => {
         };
     };
 
+    const iconUrl = "http://openweathermap.org/img/wn";
+    
     const setData = (el, res) => {
         const sunrise = new Date(res.current.sunrise * 1000);
         const sunset = new Date(res.current.sunset * 1000);
@@ -152,24 +150,24 @@ domReady().then(() => {
 
         el.cTemp.innerHTML = Math.round(res.current.temp);
         el.cCondition.innerHTML = res.current.weather[0].main;
-        el.cIcon.src = `http://openweathermap.org/img/wn/${res.current.weather[0].icon}@2x.png`;
+        el.cIcon.src = `${iconUrl}/${res.current.weather[0].icon}@2x.png`;
         el.cCity.innerHTML = res.geo.name;
         el.cFeel.innerHTML = Math.round(res.current.feels_like);
         el.cHumidity.innerHTML = res.current.humidity;
         el.cMin.innerHTML = Math.round(res.daily[0].temp.min);
         el.cMax.innerHTML = Math.round(res.daily[0].temp.max);
-        el.updatedAt.innerHTML = `${updatedAt.getHours()}:${updatedAt.getMinutes()}`;
-        el.sunrise.innerHTML = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
-        el.sunset.innerHTML = `${sunset.getHours()}:${sunset.getMinutes()}`;
+        el.updatedAt.innerHTML = getTime(updatedAt);
+        el.sunrise.innerHTML = getTime(sunrise);
+        el.sunset.innerHTML = getTime(sunset);
 
         timeConsole("Got " + days + " days of forecast", res.daily);
         for (let index = 0; index < 7; index++) {
             const fDay = res.daily[index + 1];
             el.forecast[index].dayEl.style.display = "block";
-            el.forecast[index].fIcon.src = `http://openweathermap.org/img/wn/${fDay.weather[0].icon}@2x.png`;
+            el.forecast[index].fIcon.src = `${iconUrl}/${fDay.weather[0].icon}@2x.png`;
             el.forecast[index].hiTemp.innerHTML = Math.round(fDay.temp.max);
             el.forecast[index].loTemp.innerHTML = Math.round(fDay.temp.min);
-            el.forecast[index].dayName.innerHTML = getDayName(new Date(fDay.dt * 1000));
+            el.forecast[index].dayName.innerHTML = getDay(new Date(fDay.dt * 1000));
         }
     };
 
@@ -234,7 +232,15 @@ domReady().then(() => {
     const timeConsole = (...args) => {
         const d = new Date();
         console.log(`[${d.toLocaleTimeString()}]`, ...args);
-    }
+    };
+
+    const getTime = (date) => {
+        return date.toLocaleTimeString([], { timeStyle: "short", hour12: false });
+    };
+
+    const getDay = (date = new Date()) => {
+        return date.toLocaleDateString([], { weekday: "short" });
+    };
 
     callAPI(getCity());
     autoRefresh();
