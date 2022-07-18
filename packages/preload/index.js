@@ -162,7 +162,7 @@ domReady().then(() => {
         el.sunrise.innerHTML = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
         el.sunset.innerHTML = `${sunset.getHours()}:${sunset.getMinutes()}`;
 
-        console.log("Got " + days + " days of forecast", res.daily);
+        timeConsole("Got " + days + " days of forecast", res.daily);
         for (let index = 0; index < 7; index++) {
             const fDay = res.daily[index + 1];
             el.forecast[index].dayEl.style.display = "block";
@@ -178,7 +178,7 @@ domReady().then(() => {
         const dState = popupEl.style.display;
         if (dState === "block") popupEl.style.display = "none";
         else popupEl.style.display = "block";
-        console.log("Settings opened");
+        timeConsole("Settings opened");
     };
 
     const getCity = () => {
@@ -206,22 +206,37 @@ domReady().then(() => {
 
         saveButton.addEventListener("click", () => {
             ipcRenderer.send("saveCity", cityInput.value);
-            console.log("saved button pressed");
+            timeConsole("saved button pressed");
             callAPI(cityInput.value);
             toggleSettings();
         });
     };
 
     const callAPI = async (city) => {
-        console.log("Calling API for " + city);
+        timeConsole("Calling API for " + city);
         const days = 7;
         const verify = "b2d100b565620e1b1765";
         const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}`);
         const result = await res.json();
         setData(getElements(days), result);
-        console.log("Got data", result);
+        timeConsole("Got data", result);
+        postMessage({ payload: "removeLoading" }, "*");
     };
 
+    const autoRefresh = () => {
+        const refresh = () => {
+            timeConsole("Refreshing...");
+            callAPI(getCity());
+        };
+        setInterval(refresh, 1000 * 60 * 1);
+    };
+
+    const timeConsole = (...args) => {
+        const d = new Date();
+        console.log(`[${d.toLocaleTimeString()}]`, ...args);
+    }
+
     callAPI(getCity());
+    autoRefresh();
     setupSettings();
 });
