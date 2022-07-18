@@ -30,7 +30,7 @@ const createWindow = async () => {
     }); */
     const dWidth = display.bounds.width;
     const dHeight = display.bounds.height;
-    const winWidth = 365;
+    const winWidth = 360;
     const winHeight = 210;
 
     const winConfig = {
