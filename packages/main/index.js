@@ -1,7 +1,6 @@
 const os = require("os");
 const { join } = require("path");
 const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
-const isDev = require("electron-is-dev");
 const AcrylicBW = require("electron-acrylic-window").BrowserWindow;
 const Store = require("electron-store");
 const store = new Store();
@@ -15,10 +14,6 @@ if (!app.requestSingleInstanceLock()) {
     app.quit();
     process.exit(0);
 }
-
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// eslint-disable-next-line global-require
-if (require("electron-squirrel-startup")) app.quit();
 
 const ROOT_PATH = {
     dist: join(__dirname, "../.."),
@@ -77,30 +72,25 @@ const createWindow = async () => {
 
     win = new AcrylicBW(winConfig);
 
-    // DevTools
-    if (isDev) {
-        console.log("Running in development");
-        const devtools = new BrowserWindow();
-        win.webContents.setDevToolsWebContents(devtools.webContents);
-        win.webContents.openDevTools({ mode: "detach" });
-    } else {
-        console.log("Running in production");
-    }
-
     // Test actively push message to the Electron-Renderer
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", new Date().toLocaleString());
-        //const winBounds = win.getBounds();
-        //devtools.setPosition(winBounds.x - winBounds.width + 360, winBounds.y + winBounds.height);
-        //devtools.setSize(winBounds.width * 2 + 10, winBounds.height * 2);
     });
 
     if (app.isPackaged) {
         win.loadFile(join(__dirname, "../renderer/index.html"));
+        console.log("Running in production");
     } else {
         const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
         win.loadURL(url);
-        // win.webContents.openDevTools({ mode: 'undocked' })
+        // DevTools
+        console.log("Running in development");
+        const devtools = new BrowserWindow();
+        win.webContents.setDevToolsWebContents(devtools.webContents);
+        win.webContents.openDevTools({ mode: "detach" });
+        const winBounds = win.getBounds();
+        devtools.setPosition(winBounds.x - winBounds.width, winBounds.y - winBounds.height * 2);
+        devtools.setSize(winBounds.width * 2, winBounds.height * 2);
     }
 
     /* session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

@@ -17,8 +17,6 @@
     "dependencies": {
         "dotenv": "^16.0.1",
         "electron-acrylic-window": "^0.5.11",
-        "electron-is-dev": "^2.0.0",
-        "electron-squirrel-startup": "^1.0.0",
         "electron-store": "^8.0.2"
     },
     "devDependencies": {
