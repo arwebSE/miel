@@ -215,7 +215,8 @@ domReady().then(() => {
     const callAPI = async (city) => {
         console.log("Calling API for " + city);
         const days = 7;
-        const res = await fetch(`${apiUrl}/weather?q=${city}`);
+        const verify = "b2d100b565620e1b1765";
+        const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}`);
         const result = await res.json();
         setData(getElements(days), result);
         console.log("Got data", result);

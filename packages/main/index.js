@@ -1,6 +1,7 @@
 const os = require("os");
 const { join } = require("path");
 const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
+const isDev = require("electron-is-dev");
 const AcrylicBW = require("electron-acrylic-window").BrowserWindow;
 const Store = require("electron-store");
 const store = new Store();
@@ -77,9 +78,14 @@ const createWindow = async () => {
     win = new AcrylicBW(winConfig);
 
     // DevTools
-    /* const devtools = new BrowserWindow();
-    win.webContents.setDevToolsWebContents(devtools.webContents);
-    win.webContents.openDevTools({ mode: "detach" }); */
+    if (isDev) {
+        console.log("Running in development");
+        const devtools = new BrowserWindow();
+        win.webContents.setDevToolsWebContents(devtools.webContents);
+        win.webContents.openDevTools({ mode: "detach" });
+    } else {
+        console.log("Running in production");
+    }
 
     // Test actively push message to the Electron-Renderer
     win.webContents.on("did-finish-load", () => {
