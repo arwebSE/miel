@@ -1,4 +1,3 @@
-require("dotenv").config();
 const { ipcRenderer } = require("electron");
 const Store = require("electron-store");
 const store = new Store();
@@ -237,7 +236,7 @@ domReady().then(() => {
     const callAPI = async (city) => {
         timeConsole("Calling API for " + city);
         const days = 7;
-        const verify = process.env.VERIFY;
+        const verify = "5ecf486e3b8d878a4a87";
         const freedom = getSettings().freedom;
         const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}`);
         const result = await res.json();
