@@ -13,37 +13,6 @@ body {
     -webkit-app-region: drag;
 }
 
-#settings {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    position: fixed;
-    top: 7px;
-    right: 140px;
-    width: 20px;
-    height: 20px;
-    z-index: 100;
-    outline: none;
-    background-color: rgba(0, 0, 0, 0.8);
-    border-radius: 20px;
-    will-change: filter;
-    border: 2px solid transparent;
-    font-size: 1em;
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-#settings i {
-    padding: auto;
-    margin: auto;
-}
-#settings:hover {
-    border-color: #346591;
-}
-#settings:focus,
-#settings:focus-visible {
-    outline: none;
-}
-
 h1,
 h3,
 h4,
@@ -85,6 +54,54 @@ a {
 }
 a:hover {
     color: #535bf2;
+}
+
+#settings {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    position: fixed;
+    top: 7px;
+    right: 140px;
+    width: 20px;
+    height: 20px;
+    z-index: 100;
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    will-change: filter;
+    border: 2px solid transparent;
+    font-size: 1em;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+#settings i {
+    padding: auto;
+    margin: auto;
+}
+#settings:hover {
+    border-color: #346591;
+}
+#settings:focus,
+#settings:focus-visible {
+    outline: none;
+}
+
+.popup {
+    width: 150px;
+    position: fixed;
+    top: 35px;
+    left: 50px;
+    background-color: rgb(22, 106, 185);
+    padding: 0.5em;
+    z-index: 100;
+    -webkit-app-region: no-drag;
+    text-align: left;
+    border-radius: 5px;
+}
+
+#cityInput {
+    width: 100px;
 }
 
 .card {
@@ -249,15 +266,4 @@ a:hover {
 
 .vertical-center {
     margin: auto 0 !important;
-}
-
-.popup {
-    width: 250px;
-    position: fixed;
-    top: 35px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 0.5em;
-    z-index: 100;
-    -webkit-app-region: no-drag;
 }

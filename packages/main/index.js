@@ -20,6 +20,11 @@ const ROOT_PATH = {
     public: join(__dirname, app.isPackaged ? "../.." : "../../../public"),
 };
 
+const timeConsole = (...args) => {
+    const d = new Date();
+    console.log(`[${d.toLocaleTimeString()}]`, ...args);
+};
+
 let win = null;
 
 const createWindow = async () => {
@@ -65,6 +70,8 @@ const createWindow = async () => {
         },
     };
 
+    setAutoStart();
+
     /* if (extDisplay) {
         winConfig.x = extDisplay.bounds.width - dWidth - 88;
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
@@ -79,12 +86,12 @@ const createWindow = async () => {
 
     if (app.isPackaged) {
         win.loadFile(join(__dirname, "../renderer/index.html"));
-        console.log("Running in production");
+        timeConsole("Running in production");
     } else {
         const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
         win.loadURL(url);
         // DevTools
-        console.log("Running in development");
+        timeConsole("Running in development");
         const devtools = new BrowserWindow();
         win.webContents.setDevToolsWebContents(devtools.webContents);
         win.webContents.openDevTools({ mode: "detach" });
@@ -129,29 +136,45 @@ app.on("activate", () => {
     }
 });
 
-const getCity = () => {
-    const store = new Store();
-    const defaultCity = "Stockholm";
-    const city = store.get("city");
+// autostart
+const setAutoStart = (autoStart = getSettings().autoStart) => {
+    timeConsole("Setting autoStart:", autoStart);
+    app.setLoginItemSettings({
+        openAtLogin: autoStart,
+        path: app.getPath("exe"),
+    });
+};
 
-    if (city) return city;
+const getSettings = () => {
+    const store = new Store();
+    const settings = store.get("settings");
+
+    if (settings) return settings;
     else {
-        store.set("city", defaultCity);
-        return defaultCity;
+        const defaultSettings = {
+            city: "Stockholm",
+            autoStart: false,
+            format24: true,
+            freedom: false,
+        };
+        store.set("settings", defaultSettings);
+        return defaultSettings;
     }
 };
 
-const setCity = (city) => {
-    if (city) store.set("city", city);
-    else console.log("city empty, not saving");
+const setSettings = (settings) => {
+    if (settings) store.set("settings", settings);
+    else timeConsole("settings empty, not saving");
 };
 
-ipcMain.on("saveCity", (_event, value) => {
-    const storedCity = getCity();
-    console.log("Stored city:", storedCity);
-    console.log("Saving city:", value);
-    if (value !== storedCity) {
-        console.log("Saving city:", value);
-        setCity(value);
+ipcMain.on("saveSettings", (_event, settings) => {
+    const storedSettings = getSettings();
+    timeConsole("Stored settings:", storedSettings);
+    if (settings !== storedSettings) {
+        timeConsole("Saving settings:", settings);
+        setSettings(settings);
+        if (settings.autoStart !== storedSettings) {
+            setAutoStart(settings.autoStart);
+        }
     }
 });
