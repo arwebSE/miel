@@ -101,6 +101,8 @@ setTimeout(removeLoading, 4999);
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
+    const iconUrl = "http://openweathermap.org/img/wn";
+
     const getElements = (days) => {
         const cTemp = document.getElementById("temp");
         const cCondition = document.getElementById("condition");
@@ -113,6 +115,7 @@ domReady().then(() => {
         const updatedAt = document.getElementById("updatedAt");
         const sunrise = document.getElementById("sunrise");
         const sunset = document.getElementById("sunset");
+        const tempFormat = document.getElementsByClassName("tempFormat");
 
         const forecast = [];
         for (let index = 0; index < days; index++) {
@@ -137,11 +140,10 @@ domReady().then(() => {
             sunrise,
             sunset,
             forecast,
+            tempFormat,
         };
     };
 
-    const iconUrl = "http://openweathermap.org/img/wn";
-    
     const setData = (el, res) => {
         const sunrise = new Date(res.current.sunrise * 1000);
         const sunset = new Date(res.current.sunset * 1000);
@@ -159,6 +161,11 @@ domReady().then(() => {
         el.updatedAt.innerHTML = getTime(updatedAt);
         el.sunrise.innerHTML = getTime(sunrise);
         el.sunset.innerHTML = getTime(sunset);
+        const tempUnit = getSettings().freedom ? "F" : "C";
+        const unitElements = document.getElementsByClassName("tempFormat");
+        [].slice.call(unitElements).forEach(function (el) {
+            el.innerHTML = tempUnit;
+        });
 
         timeConsole("Got " + days + " days of forecast", res.daily);
         for (let index = 0; index < 7; index++) {
@@ -179,33 +186,51 @@ domReady().then(() => {
         timeConsole("Settings opened");
     };
 
-    const getCity = () => {
-        const defaultCity = "Stockholm";
-        const city = store.get("city");
+    const getSettings = () => {
+        const store = new Store();
+        const settings = store.get("settings");
 
-        if (city) return city;
+        if (settings) return settings;
         else {
-            store.set("city", defaultCity);
-            return defaultCity;
+            const defaultSettings = {
+                city: "Stockholm",
+                autoStart: false,
+                format24: true,
+                freedom: false,
+            };
+            store.set("settings", defaultSettings);
+            return defaultSettings;
         }
     };
 
     const setupSettings = () => {
         const settingsButton = document.getElementById("settings");
         const cityInput = document.getElementById("cityInput");
-        const saveButton = document.getElementById("saveCity");
+        const autoStart = document.getElementById("autoStart");
+        const format24 = document.getElementById("format24");
+        const freedom = document.getElementById("freedom");
+        const saveButton = document.getElementById("saveSettings");
 
-        const city = getCity();
-        cityInput.value = city;
+        const settings = getSettings();
+        cityInput.value = settings.city;
+        autoStart.checked = settings.autoStart;
+        format24.checked = settings.format24;
+        freedom.checked = settings.freedom;
 
         settingsButton.addEventListener("click", () => {
             toggleSettings();
         });
 
         saveButton.addEventListener("click", () => {
-            ipcRenderer.send("saveCity", cityInput.value);
-            timeConsole("saved button pressed");
-            callAPI(cityInput.value);
+            const newSettings = {
+                city: cityInput.value,
+                autoStart: autoStart.checked,
+                format24: format24.checked,
+                freedom: freedom.checked,
+            };
+            timeConsole("Sending data to ipcMain", newSettings);
+            ipcRenderer.send("saveSettings", newSettings);
+            callAPI(newSettings.city);
             toggleSettings();
         });
     };
@@ -214,7 +239,9 @@ domReady().then(() => {
         timeConsole("Calling API for " + city);
         const days = 7;
         const verify = "b2d100b565620e1b1765";
-        const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}`);
+        const freedom = getSettings().freedom;
+        console.log("fetching", city, freedom);
+        const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}`);
         const result = await res.json();
         setData(getElements(days), result);
         timeConsole("Got data", result);
@@ -223,8 +250,8 @@ domReady().then(() => {
 
     const autoRefresh = () => {
         const refresh = () => {
-            timeConsole("Refreshing...");
-            callAPI(getCity());
+            timeConsole("AutoRefreshing...");
+            callAPI(getSettings().city);
         };
         setInterval(refresh, 1000 * 60 * 60);
     };
@@ -235,14 +262,15 @@ domReady().then(() => {
     };
 
     const getTime = (date) => {
-        return date.toLocaleTimeString([], { timeStyle: "short", hour12: false });
+        const hour24 = getSettings().format24;
+        return date.toLocaleTimeString([], { timeStyle: "short", hour12: !hour24 });
     };
 
     const getDay = (date = new Date()) => {
         return date.toLocaleDateString([], { weekday: "short" });
     };
 
-    callAPI(getCity());
+    callAPI(getSettings().city);
     autoRefresh();
     setupSettings();
 });

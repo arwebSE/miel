@@ -16,8 +16,15 @@
 
             <div class="wrap">
                 <div id="popup" class="popup" style="display: none">
-                    <input type="text" id="cityInput" />
-                    <button class="button is-dark" id="saveCity">Save</button>
+                    <label for="city">City</label>
+                    <input type="text" id="cityInput" name="city" /> <br />
+                    <label for="autoStart">AutoStart</label>
+                    <input type="checkbox" id="autoStart" name="autoStart" /><br />
+                    <label for="format24">24-Hour Time</label>
+                    <input type="checkbox" id="format24" name="format24" />
+                    <label for="freedom">Freedom Units (F)</label>
+                    <input type="checkbox" id="freedom" name="freedom" />
+                    <div class="center"><button class="button is-dark" id="saveSettings">Save</button></div>
                 </div>
                 <h5 id="updated"><i class="fa-solid fa-xs fa-arrows-rotate"></i> <span id="updatedAt"></span></h5>
                 <div id="row1" class="row">
@@ -28,11 +35,11 @@
                             </div>
                             <div class="center">
                                 <h3 id="condition">Clear</h3>
-                                <h1><span id="temp"></span>&deg;C</h1>
+                                <h1><span id="temp"></span>&deg;<span class="tempFormat">C</span></h1>
                             </div>
                             <div class="vertical-center">
-                                <h6><i class="fa-solid fa-arrow-up"></i><span id="cMax">19</span>&deg;C</h6>
-                                <h6><i class="fa-solid fa-arrow-down"></i><span id="cMin">12</span>&deg;C</h6>
+                                <h6><i class="fa-solid fa-arrow-up"></i><span id="cMax">?</span>&deg;<span class="tempFormat">C</span></h6>
+                                <h6><i class="fa-solid fa-arrow-down"></i><span id="cMin">?</span>&deg;<span class="tempFormat">C</span></h6>
                             </div>
                         </div>
                         <div class="row">
@@ -42,7 +49,7 @@
                     <div class="col" id="details">
                         <div class="row">
                             <h5 class="left read-the-docs">Feels like</h5>
-                            <h5 class="right"><span id="feel"></span>&deg;C</h5>
+                            <h5 class="right"><span id="feel"></span>&deg;<span class="tempFormat">C</span></h5>
                         </div>
                         <div class="row">
                             <h5 class="left read-the-docs">Humidity</h5>
