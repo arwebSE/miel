@@ -244,10 +244,19 @@ domReady().then(() => {
         const days = 7;
         const verify = "5ecf486e3b8d878a4a87";
         const freedom = getSettings().freedom;
-        const res = await fetch(`${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}`);
-        const result = await res.json();
-        setData(getElements(days), result);
-        timeConsole("Got data", result);
+        const url = `${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}`;
+        const warningEl = document.getElementById("warning");
+        await fetch(url)
+            .then((response) => response.json())
+            .then((result) => {
+                setData(getElements(days), result);
+                timeConsole("Got data", result);
+                warningEl.innerHTML = "";
+            })
+            .catch((error) => {
+                timeConsole("Error fetching API:", error);
+                warningEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            });
         postMessage({ payload: "removeLoading" }, "*");
     };
 
@@ -269,7 +278,7 @@ domReady().then(() => {
         timeouts.push(
             setTimeout(function () {
                 autoRefresh({ reason: "Auto" });
-            }, 1000 * 60 * 1)
+            }, 1000 * 60 * 30)
         );
     };
 
