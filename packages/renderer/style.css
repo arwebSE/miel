@@ -57,6 +57,7 @@ a:hover {
 }
 
 #settings {
+    -webkit-app-region: no-drag;
     margin: 0;
     padding: 0;
     display: flex;
@@ -250,13 +251,16 @@ a:hover {
 }
 
 #updated {
-    position: fixed;
+    -webkit-app-region: no-drag;
+    position: absolute;
     top: 1px;
-    left: 6px;
+    left: 0;
     z-index: 99;
     text-align: center;
     margin: auto;
     color: darkgray;
+    cursor: pointer;
+    background-color: #1a1a1a;
 }
 
 .center {

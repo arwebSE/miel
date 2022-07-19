@@ -101,6 +101,7 @@ setTimeout(removeLoading, 4999);
 
 domReady().then(() => {
     const iconUrl = "http://openweathermap.org/img/wn";
+    let timeouts = [];
 
     const getElements = (days) => {
         const cTemp = document.getElementById("temp");
@@ -158,6 +159,11 @@ domReady().then(() => {
         el.cMin.innerHTML = Math.round(res.daily[0].temp.min);
         el.cMax.innerHTML = Math.round(res.daily[0].temp.max);
         el.updatedAt.innerHTML = getTime(updatedAt);
+        const updated = document.getElementById("updated");
+        updated.addEventListener("click", () => {
+            console.log("clicked updatedAt");
+            autoRefresh({ reason: "updatedAt" });
+        });
         el.sunrise.innerHTML = getTime(sunrise);
         el.sunset.innerHTML = getTime(sunset);
         const tempUnit = getSettings().freedom ? "F" : "C";
@@ -228,7 +234,7 @@ domReady().then(() => {
             };
             timeConsole("Sending data to ipcMain", newSettings);
             ipcRenderer.send("saveSettings", newSettings);
-            callAPI(newSettings.city);
+            autoRefresh({ city: newSettings.city, reason: "Settings" });
             toggleSettings();
         });
     };
@@ -245,12 +251,26 @@ domReady().then(() => {
         postMessage({ payload: "removeLoading" }, "*");
     };
 
-    const autoRefresh = () => {
-        const refresh = () => {
-            timeConsole("AutoRefreshing...");
-            callAPI(getSettings().city);
-        };
-        setInterval(refresh, 1000 * 60 * 60);
+    const clearTimeouts = () => {
+        timeConsole("Clearing timeouts", timeouts);
+        for (var i = 0; i < timeouts.length; i++) {
+            clearTimeout(timeouts[i]);
+        }
+        timeouts = [];
+    };
+
+    const autoRefresh = async (params) => {
+        appendLoading();
+        if (params.reason) timeConsole(params.reason, "refresh...");
+        else timeConsole("Manual refresh...");
+        await callAPI(params.city || getSettings().city);
+        removeLoading();
+        clearTimeouts();
+        timeouts.push(
+            setTimeout(function () {
+                autoRefresh({ reason: "Auto" });
+            }, 1000 * 60 * 1)
+        );
     };
 
     const timeConsole = (...args) => {
@@ -267,7 +287,6 @@ domReady().then(() => {
         return date.toLocaleDateString([], { weekday: "short" });
     };
 
-    callAPI(getSettings().city);
-    autoRefresh();
     setupSettings();
+    autoRefresh({ reason: "Initial" });
 });

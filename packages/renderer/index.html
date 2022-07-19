@@ -12,7 +12,10 @@
     </head>
     <body>
         <div id="app">
-            <button id="settings" style="-webkit-app-region: no-drag"><i class="fa-solid fa-gear"></i></button>
+            <button id="updated">
+                <i class="fa-solid fa-xs fa-arrows-rotate"></i> <span id="updatedAt"></span>
+            </button>
+            <button id="settings"><i class="fa-solid fa-gear"></i></button>
 
             <div class="wrap">
                 <div id="popup" class="popup" style="display: none">
@@ -26,7 +29,7 @@
                     <input type="checkbox" id="freedom" name="freedom" />
                     <div class="center"><button class="button is-dark" id="saveSettings">Save</button></div>
                 </div>
-                <h5 id="updated"><i class="fa-solid fa-xs fa-arrows-rotate"></i> <span id="updatedAt"></span></h5>
+
                 <div id="row1" class="row">
                     <div id="current" class="col">
                         <div class="row">
@@ -38,8 +41,18 @@
                                 <h1><span id="temp"></span>&deg;<span class="tempFormat">C</span></h1>
                             </div>
                             <div class="vertical-center">
-                                <h6><i class="fa-solid fa-arrow-up"></i><span id="cMax">?</span>&deg;<span class="tempFormat">C</span></h6>
-                                <h6><i class="fa-solid fa-arrow-down"></i><span id="cMin">?</span>&deg;<span class="tempFormat">C</span></h6>
+                                <h6>
+                                    <i class="fa-solid fa-arrow-up"></i><span id="cMax">?</span>&deg;<span
+                                        class="tempFormat"
+                                        >C</span
+                                    >
+                                </h6>
+                                <h6>
+                                    <i class="fa-solid fa-arrow-down"></i><span id="cMin">?</span>&deg;<span
+                                        class="tempFormat"
+                                        >C</span
+                                    >
+                                </h6>
                             </div>
                         </div>
                         <div class="row">
