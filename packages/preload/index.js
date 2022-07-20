@@ -31,28 +31,10 @@ const safeDOM = {
     },
 };
 
-/**
- * https://tobiasahlin.com/spinkit
- * https://connoratherton.com/loaders
- * https://projects.lukehaas.me/css-loaders
- * https://matejkustec.github.io/SpinThatShit
- */
+/* Loader */
 function useLoading() {
-    const className = `loaders-css__square-spin`;
+    const className = `loader`;
     const styleContent = `
-@keyframes square-spin {
-  25% { transform: perspective(100px) rotateX(180deg) rotateY(0); }
-  50% { transform: perspective(100px) rotateX(180deg) rotateY(180deg); }
-  75% { transform: perspective(100px) rotateX(0) rotateY(180deg); }
-  100% { transform: perspective(100px) rotateX(0) rotateY(0); }
-}
-.${className} > div {
-  animation-fill-mode: both;
-  width: 50px;
-  height: 50px;
-  background: #fff;
-  animation: square-spin 3s 0s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
-}
 .app-loading-wrap {
   position: fixed;
   top: 0;
@@ -62,17 +44,79 @@ function useLoading() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #282c34;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 9;
 }
-    `;
+
+.sk-chase {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    animation: sk-chase 2.5s infinite linear both;
+}
+  
+.sk-chase-dot {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0; 
+    animation: sk-chase-dot 2.0s infinite ease-in-out both; 
+}
+  
+.sk-chase-dot:before {
+    content: '';
+    display: block;
+    width: 25%;
+    height: 25%;
+    background-color: #fff;
+    border-radius: 100%;
+    animation: sk-chase-dot-before 2.0s infinite ease-in-out both; 
+}
+  
+.sk-chase-dot:nth-child(1) { animation-delay: -1.1s; }
+.sk-chase-dot:nth-child(2) { animation-delay: -1.0s; }
+.sk-chase-dot:nth-child(3) { animation-delay: -0.9s; }
+.sk-chase-dot:nth-child(4) { animation-delay: -0.8s; }
+.sk-chase-dot:nth-child(5) { animation-delay: -0.7s; }
+.sk-chase-dot:nth-child(6) { animation-delay: -0.6s; }
+.sk-chase-dot:nth-child(1):before { animation-delay: -1.1s; }
+.sk-chase-dot:nth-child(2):before { animation-delay: -1.0s; }
+.sk-chase-dot:nth-child(3):before { animation-delay: -0.9s; }
+.sk-chase-dot:nth-child(4):before { animation-delay: -0.8s; }
+.sk-chase-dot:nth-child(5):before { animation-delay: -0.7s; }
+.sk-chase-dot:nth-child(6):before { animation-delay: -0.6s; }
+  
+@keyframes sk-chase {
+    100% { transform: rotate(360deg); } 
+}
+  
+@keyframes sk-chase-dot {
+    80%, 100% { transform: rotate(360deg); } 
+}
+  
+@keyframes sk-chase-dot-before {
+    50% {
+        transform: scale(0.4); 
+    } 100%, 0% {
+        transform: scale(1.0); 
+    }
+}`;
+
     const oStyle = document.createElement("style");
     const oDiv = document.createElement("div");
 
     oStyle.id = "app-loading-style";
     oStyle.innerHTML = styleContent;
     oDiv.className = "app-loading-wrap";
-    oDiv.innerHTML = `<div class="${className}"><div></div></div>`;
+    oDiv.innerHTML = `<div class="${className}"><div class="sk-chase">
+    <div class="sk-chase-dot"></div>
+    <div class="sk-chase-dot"></div>
+    <div class="sk-chase-dot"></div>
+    <div class="sk-chase-dot"></div>
+    <div class="sk-chase-dot"></div>
+    <div class="sk-chase-dot"></div>
+</div><div></div></div>`;
 
     return {
         appendLoading() {
@@ -159,11 +203,6 @@ domReady().then(() => {
         el.cMin.innerHTML = Math.round(res.daily[0].temp.min);
         el.cMax.innerHTML = Math.round(res.daily[0].temp.max);
         el.updatedAt.innerHTML = getTime(updatedAt);
-        const updated = document.getElementById("updated");
-        updated.addEventListener("click", () => {
-            console.log("clicked updatedAt");
-            autoRefresh({ reason: "updatedAt" });
-        });
         el.sunrise.innerHTML = getTime(sunrise);
         el.sunset.innerHTML = getTime(sunset);
         const tempUnit = getSettings().freedom ? "F" : "C";
@@ -237,6 +276,12 @@ domReady().then(() => {
             autoRefresh({ city: newSettings.city, reason: "Settings" });
             toggleSettings();
         });
+
+        const updated = document.getElementById("updated");
+        updated.addEventListener("click", () => {
+            console.log("clicked updatedAt");
+            autoRefresh({ reason: "updatedAt" });
+        });
     };
 
     const callAPI = async (city) => {
@@ -252,10 +297,14 @@ domReady().then(() => {
                 setData(getElements(days), result);
                 timeConsole("Got data", result);
                 warningEl.innerHTML = "";
+                clearTimeouts();
+                normalTimeout();
             })
             .catch((error) => {
                 timeConsole("Error fetching API:", error);
-                warningEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+                warningEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation fa-xs"></i>`;
+                clearTimeouts();
+                errorTimeout();
             });
         postMessage({ payload: "removeLoading" }, "*");
     };
@@ -268,18 +317,29 @@ domReady().then(() => {
         timeouts = [];
     };
 
+    const errorTimeout = () => {
+        timeConsole("Error timeout");
+        timeouts.push(
+            setTimeout(function () {
+                autoRefresh({ reason: "Error" });
+            }, 1000 * 60 * 5)
+        );
+    };
+
+    const normalTimeout = () => {
+        timeouts.push(
+            setTimeout(function () {
+                autoRefresh({ reason: "Auto" });
+            }, 1000 * 60 * 30)
+        );
+    };
+
     const autoRefresh = async (params) => {
         appendLoading();
         if (params.reason) timeConsole(params.reason, "refresh...");
         else timeConsole("Manual refresh...");
         await callAPI(params.city || getSettings().city);
         removeLoading();
-        clearTimeouts();
-        timeouts.push(
-            setTimeout(function () {
-                autoRefresh({ reason: "Auto" });
-            }, 1000 * 60 * 30)
-        );
     };
 
     const timeConsole = (...args) => {
