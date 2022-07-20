@@ -260,7 +260,8 @@ a:hover {
     margin: auto;
     color: darkgray;
     cursor: pointer;
-    background-color: #1a1a1a;
+    background-color: transparent;
+    border: none;
 }
 
 .center {
