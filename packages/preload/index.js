@@ -279,8 +279,7 @@ domReady().then(() => {
 
         const updated = document.getElementById("updated");
         updated.addEventListener("click", () => {
-            console.log("clicked updatedAt");
-            autoRefresh({ reason: "updatedAt" });
+            autoRefresh({ reason: "Manual" });
         });
     };
 
