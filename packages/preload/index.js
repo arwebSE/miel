@@ -240,6 +240,7 @@ domReady().then(() => {
                 autoStart: false,
                 format24: true,
                 freedom: false,
+                theme: "translucent",
             };
             store.set("settings", defaultSettings);
             return defaultSettings;
@@ -253,12 +254,14 @@ domReady().then(() => {
         const format24 = document.getElementById("format24");
         const freedom = document.getElementById("freedom");
         const saveButton = document.getElementById("saveSettings");
+        const theme = document.getElementById("theme");
 
         const settings = getSettings();
         cityInput.value = settings.city;
         autoStart.checked = settings.autoStart;
         format24.checked = settings.format24;
         freedom.checked = settings.freedom;
+        theme.value = settings.theme;
 
         settingsButton.addEventListener("click", () => {
             toggleSettings();
@@ -270,6 +273,7 @@ domReady().then(() => {
                 autoStart: autoStart.checked,
                 format24: format24.checked,
                 freedom: freedom.checked,
+                theme: theme.value,
             };
             timeConsole("Sending data to ipcMain", newSettings);
             ipcRenderer.send("saveSettings", newSettings);
