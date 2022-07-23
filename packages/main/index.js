@@ -1,7 +1,7 @@
 const os = require("os");
 const { join } = require("path");
 const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
-const AcrylicBW = require("electron-acrylic-window").BrowserWindow;
+const { setVibrancy } = require("electron-acrylic-window");
 const Store = require("electron-store");
 const store = new Store();
 
@@ -44,7 +44,6 @@ const createWindow = async () => {
         height: winHeight,
         x: dWidth - winWidth,
         y: dHeight - winHeight - 40,
-
         webPreferences: {
             preload: join(__dirname, "../preload/index.cjs"),
             contextIsolation: false,
@@ -52,21 +51,12 @@ const createWindow = async () => {
         },
         icon: join(ROOT_PATH.public, "logo.svg"),
         autoHideMenuBar: true,
-        frame: true,
+        frame: false,
         resizable: false,
-        /* transparent: true,
-        backgroundColor: "#00000001", */
         titleBarStyle: "hidden",
         titleBarOverlay: {
-            color: "#111",
+            color: "#00000055",
             symbolColor: "#3a82b3",
-        },
-        vibrancy: {
-            theme: "#00000044",
-            effect: "dark",
-            disableOnBlur: false,
-            maximumRefreshRate: 60,
-            useCustomWindowRefreshMethod: false,
         },
     };
 
@@ -77,7 +67,7 @@ const createWindow = async () => {
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
     } */
 
-    win = new AcrylicBW(winConfig);
+    win = new BrowserWindow(winConfig);
 
     // Test actively push message to the Electron-Renderer
     win.webContents.on("did-finish-load", () => {
@@ -145,6 +135,31 @@ const setAutoStart = (autoStart = getSettings().autoStart) => {
     });
 };
 
+// theme
+const setTheme = (theme = getSettings().theme) => {
+    timeConsole("Setting theme:", theme);
+    const setTranslucent = () => {
+        setVibrancy(win, {
+            theme: "#15151550",
+            effect: "acrylic",
+            disableOnBlur: false,
+            maximumRefreshRate: 60,
+            useCustomWindowRefreshMethod: true,
+        });
+    };
+    switch (getSettings().theme) {
+        case "opaque":
+            setVibrancy(win, null);
+            break;
+        case "translucent":
+            setTranslucent();
+            break;
+        default:
+            setTranslucent();
+            break;
+    }
+}
+
 const getSettings = () => {
     const store = new Store();
     const settings = store.get("settings");
@@ -156,6 +171,7 @@ const getSettings = () => {
             autoStart: false,
             format24: true,
             freedom: false,
+            theme: "translucent",
         };
         store.set("settings", defaultSettings);
         return defaultSettings;
@@ -173,8 +189,11 @@ ipcMain.on("saveSettings", (_event, settings) => {
     if (settings !== storedSettings) {
         timeConsole("Saving settings:", settings);
         setSettings(settings);
-        if (settings.autoStart !== storedSettings) {
+        if (settings.autoStart !== storedSettings.autoStart) {
             setAutoStart(settings.autoStart);
+        }
+        if (settings.theme !== storedSettings.theme) {
+            setTheme(settings.theme);
         }
     }
 });
