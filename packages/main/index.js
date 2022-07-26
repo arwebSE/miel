@@ -55,9 +55,10 @@ const createWindow = async () => {
         resizable: false,
         titleBarStyle: "hidden",
         titleBarOverlay: {
-            color: "#00000055",
+            color: "#00000000",
             symbolColor: "#3a82b3",
         },
+        transparent: true,
     };
 
     setAutoStart();
@@ -72,6 +73,7 @@ const createWindow = async () => {
     // Test actively push message to the Electron-Renderer
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", new Date().toLocaleString());
+        setTheme();
     });
 
     if (app.isPackaged) {
@@ -136,29 +138,41 @@ const setAutoStart = (autoStart = getSettings().autoStart) => {
 };
 
 // theme
-const setTheme = (theme = getSettings().theme) => {
+const setTheme = async (theme = getSettings().theme) => {
     timeConsole("Setting theme:", theme);
+    const performance = {
+        disableOnBlur: false,
+        maximumRefreshRate: 60,
+        useCustomWindowRefreshMethod: true,
+        debug: true,
+    };
     const setTranslucent = () => {
         setVibrancy(win, {
-            theme: "#15151550",
+            theme: "dark",
             effect: "acrylic",
-            disableOnBlur: false,
-            maximumRefreshRate: 60,
-            useCustomWindowRefreshMethod: true,
+            ...performance,
         });
     };
     switch (getSettings().theme) {
         case "opaque":
             setVibrancy(win, null);
+            win.webContents.send("theme", "opaque");
             break;
         case "translucent":
             setTranslucent();
+            win.webContents.send("theme", "translucent");
+            break;
+        case "classic":
+            setVibrancy(win, null);
+            win.webContents.send("theme", "classic");
+            //win.webContents.reloadIgnoringCache();
             break;
         default:
             setTranslucent();
+            win.webContents.send("theme", "translucent");
             break;
     }
-}
+};
 
 const getSettings = () => {
     const store = new Store();
@@ -196,4 +210,5 @@ ipcMain.on("saveSettings", (_event, settings) => {
             setTheme(settings.theme);
         }
     }
+    //win.webContents.reloadIgnoringCache();
 });

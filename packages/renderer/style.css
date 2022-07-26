@@ -3,14 +3,16 @@
         "Open Sans", "Helvetica Neue", sans-serif;
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #00000050;
 }
 
 body {
     margin: 0;
     min-width: 320px;
-    min-height: 100vh;
+    min-height: 99vh;
     -webkit-app-region: drag;
+    border-color: rgb(53, 53, 53);
+    border-width: 1px;
+    border-style: solid;
 }
 
 h1,
@@ -68,7 +70,7 @@ a:hover {
     height: 20px;
     z-index: 100;
     outline: none;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     will-change: filter;
     border: 2px solid transparent;
