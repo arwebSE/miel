@@ -4,9 +4,10 @@ A standalone weather widget built for desktop using [Electron.js](https://www.el
 
 This application makes calls to a backend API, https://github.com/arwebSE/miel-api .
 
-# screenshot
+# screenshots
 
-![screenshot](https://i.imgur.com/Bpg2oCr.png)
+![main window](https://i.imgur.com/Bpg2oCr.png)
+![settings](https://i.imgur.com/2e7B2sJ.png)
 
 # credits
 
