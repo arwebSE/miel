@@ -6,8 +6,8 @@ This application makes calls to a backend API, https://github.com/arwebSE/miel-a
 
 # screenshots
 
-![main window](https://i.imgur.com/Bpg2oCr.png)
-![settings](https://i.imgur.com/2e7B2sJ.png)
+![main window](https://i.imgur.com/9euSA5o.png)
+![settings](https://i.imgur.com/nFEJayH.png)
 
 # credits
 
