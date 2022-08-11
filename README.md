@@ -4,6 +4,10 @@ A standalone weather widget built for desktop using [Electron.js](https://www.el
 
 This application makes calls to a backend API, https://github.com/arwebSE/miel-api .
 
-# Credits
+# screenshot
+
+![screenshot](https://i.imgur.com/Bpg2oCr.png)
+
+# credits
 
 * Design based on [Win10Widgets'](https://github.com/tjmarkham/win10widgets) weather skin for [Rainmeter](https://www.rainmeter.net/).
