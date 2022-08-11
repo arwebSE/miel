@@ -144,7 +144,6 @@ setTimeout(removeLoading, 4999);
 // ----------------------------------------------------------------------
 
 domReady().then(() => {
-    const iconUrl = "http://openweathermap.org/img/wn";
     let timeouts = [];
 
     const getElements = (days) => {
@@ -194,6 +193,15 @@ domReady().then(() => {
         const updatedAt = new Date(res.current.dt * 1000);
         const days = res.daily.length;
 
+        let iconUrl = "/icons";
+        switch (getSettings().icons) {
+            case "openweathermap":
+                iconUrl = "http://openweathermap.org/img/wn";
+                break;
+            default:
+                break;
+        }
+
         el.cTemp.innerHTML = Math.round(res.current.temp);
         el.cCondition.innerHTML = res.current.weather[0].main;
         el.cIcon.src = `${iconUrl}/${res.current.weather[0].icon}@2x.png`;
@@ -240,6 +248,7 @@ domReady().then(() => {
                 format24: true,
                 freedom: false,
                 theme: "translucent",
+                icons: "default",
             };
             store.set("settings", defaultSettings);
             return defaultSettings;
@@ -250,17 +259,22 @@ domReady().then(() => {
         const settingsButton = document.getElementById("settings");
         const cityInput = document.getElementById("cityInput");
         const autoStart = document.getElementById("autoStart");
+        const alwaysOnTop = document.getElementById("alwaysOnTop");
         const format24 = document.getElementById("format24");
         const freedom = document.getElementById("freedom");
         const saveButton = document.getElementById("saveSettings");
+        const exitButton = document.getElementById("exit");
         const theme = document.getElementById("theme");
+        const icons = document.getElementById("icons");
 
         const settings = getSettings();
         cityInput.value = settings.city;
         autoStart.checked = settings.autoStart;
+        alwaysOnTop.checked = settings.alwaysOnTop;
         format24.checked = settings.format24;
         freedom.checked = settings.freedom;
         theme.value = settings.theme;
+        icons.value = settings.icons;
 
         settingsButton.addEventListener("click", () => {
             toggleSettings();
@@ -270,14 +284,29 @@ domReady().then(() => {
             const newSettings = {
                 city: cityInput.value,
                 autoStart: autoStart.checked,
+                alwaysOnTop: alwaysOnTop.checked,
                 format24: format24.checked,
                 freedom: freedom.checked,
                 theme: theme.value,
+                icons: icons.value,
             };
             timeConsole("Sending data to ipcMain", newSettings);
             ipcRenderer.send("saveSettings", newSettings);
             autoRefresh({ city: newSettings.city, reason: "Settings" });
             toggleSettings();
+        });
+
+        // save settings on Enter
+        cityInput.addEventListener("keyup", (event) => {
+            event.preventDefault();
+            if (event.key === "Enter") {
+                saveButton.click();
+            }
+        });
+
+        // exit on pressing X
+        exitButton.addEventListener("click", () => {
+            ipcRenderer.send("exit");
         });
 
         const updated = document.getElementById("updated");
@@ -369,7 +398,7 @@ domReady().then(() => {
                 root.style.backgroundColor = "#141414";
                 break;
             case "translucent":
-                root.style.backgroundColor = "rgba(29, 29, 29, 0.5)";
+                root.style.backgroundColor = "rgba(29, 29, 29, 0.45)";
                 break;
             case "classic":
                 root.style.backgroundColor = "rgba(18, 18, 18, 0.9)";
@@ -379,5 +408,4 @@ domReady().then(() => {
                 break;
         }
     });
-
 });

@@ -15,25 +15,36 @@
             <button id="updated">
                 <i class="fa-solid fa-xs fa-arrows-rotate"></i> <span id="updatedAt"></span> <span id="warning"></span>
             </button>
-            <button id="settings"><i class="fa-solid fa-gear"></i></button>
+            <button id="settings"><i class="fa-solid fa-gear fa-xs"></i></button>
+
+            <button id="exit"><i class="fa-solid fa-xmark"></i></button>
 
             <div class="wrap">
                 <div id="popup" class="popup" style="display: none">
                     <label for="city">City</label>
                     <input type="text" id="cityInput" name="city" /> <br />
                     <label for="autoStart">AutoStart</label>
-                    <input type="checkbox" id="autoStart" name="autoStart" /><br />
-                    <label for="format24">24-Hour Time</label>
+                    <input type="checkbox" id="autoStart" name="autoStart" />
+                    <label for="alwaysOnTop">AlwaysOnTop</label>
+                    <input type="checkbox" id="alwaysOnTop" name="alwaysOnTop" /><br />
+                    <label for="format24">24-Hour</label>
                     <input type="checkbox" id="format24" name="format24" />
-                    <label for="freedom">Freedom Units (F)</label>
-                    <input type="checkbox" id="freedom" name="freedom" />
-                    <label for="theme">Theme</label>
+                    <label for="freedom">Fahrenheit</label>
+                    <input type="checkbox" id="freedom" name="freedom" /><br />
+                    <label for="theme">App Theme</label>
                     <select id="theme" name="theme">
                         <option value="translucent">Translucent</option>
                         <option value="opaque">Opaque</option>
-                        <option value="classic">Win10Widgets</option>
+                        <option value="classic">Win10Widgets</option></select
+                    ><br />
+                    <label for="icons">Icon Theme</label>
+                    <select id="icons" name="icons">
+                        <option value="default">miel</option>
+                        <option value="openweathermap">OpenWeatherMap</option>
                     </select>
-                    <div class="center saveButton"><button class="button is-dark" id="saveSettings">Save</button></div>
+                    <div class="center saveButton">
+                        <button type="submit" class="button is-dark" id="saveSettings">Save</button>
+                    </div>
                 </div>
 
                 <div id="row1" class="row">

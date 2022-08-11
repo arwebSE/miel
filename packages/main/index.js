@@ -35,7 +35,7 @@ const createWindow = async () => {
     }); */
     const dWidth = display.bounds.width;
     const dHeight = display.bounds.height;
-    const winWidth = 360;
+    const winWidth = 361;
     const winHeight = 210;
 
     const winConfig = {
@@ -54,15 +54,15 @@ const createWindow = async () => {
         frame: false,
         resizable: false,
         titleBarStyle: "hidden",
-        titleBarOverlay: {
+        /* titleBarOverlay: {
             color: "#00000000",
             symbolColor: "#3a82b3",
-        },
+        }, */
         transparent: true,
     };
 
     setAutoStart();
-
+    
     /* if (extDisplay) {
         winConfig.x = extDisplay.bounds.width - dWidth - 88;
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
@@ -74,6 +74,7 @@ const createWindow = async () => {
     win.webContents.on("did-finish-load", () => {
         win?.webContents.send("main-process-message", new Date().toLocaleString());
         setTheme();
+        setAlwaysOnTop();
     });
 
     if (app.isPackaged) {
@@ -82,14 +83,16 @@ const createWindow = async () => {
     } else {
         const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
         win.loadURL(url);
-        // DevTools
         timeConsole("Running in development");
+
+        // DevTools
         const devtools = new BrowserWindow();
         win.webContents.setDevToolsWebContents(devtools.webContents);
         win.webContents.openDevTools({ mode: "detach" });
         const winBounds = win.getBounds();
         devtools.setPosition(winBounds.x - winBounds.width, winBounds.y - winBounds.height * 2);
         devtools.setSize(winBounds.width * 2, winBounds.height * 2);
+        devtools.setAlwaysOnTop(true);
     }
 
     /* session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -135,6 +138,14 @@ const setAutoStart = (autoStart = getSettings().autoStart) => {
         openAtLogin: autoStart,
         path: app.getPath("exe"),
     });
+};
+
+// always on top
+const setAlwaysOnTop = (alwaysOnTop = getSettings().alwaysOnTop) => {
+    timeConsole("Setting alwaysOnTop:", alwaysOnTop);
+    if (win) {
+        win.setAlwaysOnTop(alwaysOnTop);
+    }
 };
 
 // theme
@@ -186,6 +197,8 @@ const getSettings = () => {
             format24: true,
             freedom: false,
             theme: "translucent",
+            icons: "default",
+            alwaysOnTop: false,
         };
         store.set("settings", defaultSettings);
         return defaultSettings;
@@ -209,6 +222,13 @@ ipcMain.on("saveSettings", (_event, settings) => {
         if (settings.theme !== storedSettings.theme) {
             setTheme(settings.theme);
         }
+        if (settings.alwaysOnTop !== storedSettings.alwaysOnTop) {
+            setAlwaysOnTop(settings.alwaysOnTop);
+        }
     }
     //win.webContents.reloadIgnoringCache();
+});
+
+ipcMain.on("exit", (_event, _arg) => {
+    app.quit();
 });
