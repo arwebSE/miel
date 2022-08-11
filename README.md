@@ -12,3 +12,4 @@ This application makes calls to a backend API, https://github.com/arwebSE/miel-a
 # credits
 
 * Design based on [Win10Widgets'](https://github.com/tjmarkham/win10widgets) weather skin for [Rainmeter](https://www.rainmeter.net/).
+* Default weather icons by [Alexey Onufriev](https://dribbble.com/onufriev)
