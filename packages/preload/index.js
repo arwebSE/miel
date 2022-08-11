@@ -193,7 +193,7 @@ domReady().then(() => {
         const updatedAt = new Date(res.current.dt * 1000);
         const days = res.daily.length;
 
-        let iconUrl = "/icons";
+        let iconUrl = "icons/";
         switch (getSettings().icons) {
             case "openweathermap":
                 iconUrl = "http://openweathermap.org/img/wn";
