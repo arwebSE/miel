@@ -144,7 +144,7 @@ const setAutoStart = (autoStart = getSettings().autoStart) => {
 const setAlwaysOnTop = (alwaysOnTop = getSettings().alwaysOnTop) => {
     timeConsole("Setting alwaysOnTop:", alwaysOnTop);
     if (win) {
-        win.setAlwaysOnTop(alwaysOnTop);
+        win.setAlwaysOnTop(alwaysOnTop, "screen-saver");
     }
 };
 
