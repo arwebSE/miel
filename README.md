@@ -16,6 +16,12 @@ This application makes calls to a backend API, https://github.com/arwebSE/miel-a
 3. ????
 4. PROFIT!
 
+# usage
+
+Run the program to make the widget appear.
+
+You can then set it to AutoStart upon device boot, using the settings menu.
+
 # credits
 
 * Design based on [Win10Widgets'](https://github.com/tjmarkham/win10widgets) weather skin for [Rainmeter](https://www.rainmeter.net/).
