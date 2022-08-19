@@ -26,7 +26,7 @@ Manually **refresh** by clicking the icon on the top left of the window.
 
 Access the *settings* menu by clicking the **cog** icon on the top right.
 
-You can **move** the widget by dragging it anywhere **but** the icons top right and top left.
+You can **move** the widget by dragging it anywhere ***but*** the icons top right and top left.
 
 # testing
 
