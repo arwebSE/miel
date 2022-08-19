@@ -18,9 +18,15 @@ This application makes calls to a backend API, https://github.com/arwebSE/miel-a
 
 # usage
 
-Run the program to make the widget appear.
+**Run** the program to make the widget appear.
 
-You can then set it to AutoStart upon device boot, using the settings menu.
+You can then set it to **AutoStart** upon device boot, using the *settings* menu.
+
+Manually **refresh** by clicking the icon on the top left of the window.
+
+Access the *settings* menu by clicking the **cog** icon on the top right.
+
+You can **move** the widget by dragging it anywhere **but** the icons top right and top left.
 
 # testing
 
