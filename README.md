@@ -22,6 +22,11 @@ Run the program to make the widget appear.
 
 You can then set it to AutoStart upon device boot, using the settings menu.
 
+# testing
+
+* Tested and working on Windows 10.
+* Tested and working on Windows 11.
+
 # credits
 
 * Design based on [Win10Widgets'](https://github.com/tjmarkham/win10widgets) weather skin for [Rainmeter](https://www.rainmeter.net/).
