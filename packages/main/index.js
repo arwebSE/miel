@@ -50,7 +50,7 @@ const createWindow = async () => {
             nodeIntegration: true,
         },
         icon: join(ROOT_PATH.public, "logo.svg"),
-        autoHideMenuBar: true,
+        /* autoHideMenuBar: true, */
         frame: false,
         resizable: false,
         titleBarStyle: "hidden",
@@ -58,7 +58,7 @@ const createWindow = async () => {
             color: "#00000000",
             symbolColor: "#3a82b3",
         }, */
-        transparent: true,
+        /* transparent: true, */
     };
 
     setAutoStart();
