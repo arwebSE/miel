@@ -1,6 +1,7 @@
 const { ipcRenderer } = require("electron");
 const Store = require("electron-store");
 const store = new Store();
+const { v4: uuid } = require("uuid");
 
 const apiUrl = "https://miel-api.arwebse.repl.co";
 
@@ -316,12 +317,13 @@ domReady().then(() => {
     };
 
     const callAPI = async (city) => {
-        timeConsole("Calling API for " + city);
         const days = 7;
         const verify = "5ecf486e3b8d878a4a87";
         const freedom = getSettings().freedom;
-        const url = `${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}`;
+        const id = uuid();
+        const url = `${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}&id=${id}`;
         const warningEl = document.getElementById("warning");
+        timeConsole("Calling API for " + city + " with url " + url);
         await fetch(url)
             .then((response) => response.json())
             .then((result) => {
