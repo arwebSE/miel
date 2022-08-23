@@ -4,6 +4,7 @@ const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
 const { setVibrancy } = require("electron-acrylic-window");
 const Store = require("electron-store");
 const store = new Store();
+const args = require("minimist")(process.argv);
 
 const isWin7 = os.release().startsWith("6.1");
 if (isWin7) app.disableHardwareAcceleration();
@@ -62,7 +63,7 @@ const createWindow = async () => {
     };
 
     setAutoStart();
-    
+
     /* if (extDisplay) {
         winConfig.x = extDisplay.bounds.width - dWidth - 88;
         winConfig.y = extDisplay.bounds.y + winHeight - 88;
@@ -77,14 +78,7 @@ const createWindow = async () => {
         setAlwaysOnTop();
     });
 
-    if (app.isPackaged) {
-        win.loadFile(join(__dirname, "../renderer/index.html"));
-        timeConsole("Running in production");
-    } else {
-        const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
-        win.loadURL(url);
-        timeConsole("Running in development");
-
+    const devTools = () => {
         // DevTools
         const devtools = new BrowserWindow();
         win.webContents.setDevToolsWebContents(devtools.webContents);
@@ -93,6 +87,20 @@ const createWindow = async () => {
         devtools.setPosition(winBounds.x - winBounds.width, winBounds.y - winBounds.height * 2);
         devtools.setSize(winBounds.width * 2, winBounds.height * 2);
         devtools.setAlwaysOnTop(true);
+    };
+
+    if (args.inspect) {
+        win.loadFile(join(__dirname, "../renderer/index.html"));
+        timeConsole("Running in DEBUG MODE");
+        devTools();
+    } else if (app.isPackaged) {
+        win.loadFile(join(__dirname, "../renderer/index.html"));
+        timeConsole("Running in PRODUCTION");
+    } else {
+        const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
+        win.loadURL(url);
+        timeConsole("Running in DEV MODE");
+        devTools();
     }
 
     /* session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

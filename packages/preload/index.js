@@ -393,7 +393,6 @@ domReady().then(() => {
     autoRefresh({ reason: "Initial" });
 
     ipcRenderer.on("theme", (_evt, theme) => {
-        timeConsole("msg:", theme);
         const root = document.querySelector(":root");
         switch (theme) {
             case "opaque":
