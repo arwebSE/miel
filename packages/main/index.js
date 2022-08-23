@@ -141,10 +141,13 @@ app.on("activate", () => {
 
 // autostart
 const setAutoStart = (autoStart = getSettings().autoStart) => {
-    timeConsole("Setting autoStart:", autoStart);
+    let startupArgs = "";
+    if (args.inspect) startupArgs = "--inspect";
+    timeConsole(`Setting autoStart: ${autoStart}, args: ${startupArgs}`);
     app.setLoginItemSettings({
         openAtLogin: autoStart,
         path: app.getPath("exe"),
+        args: [startupArgs],
     });
 };
 
