@@ -316,6 +316,10 @@ a:hover {
     border: none;
 }
 
+#updated:focus {
+    outline: none;
+}
+
 .center {
     margin: auto;
     text-align: center !important;

@@ -1,6 +1,6 @@
 {
     "name": "miEl",
-    "version": "1.3.5",
+    "version": "1.3.6",
     "description": "A beautiful desktop weather widget",
     "main": "dist/main/index.cjs",
     "repository": "https://github.com/arwebSE/miel.git",
