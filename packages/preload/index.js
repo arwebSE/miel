@@ -220,7 +220,6 @@ domReady().then(() => {
         el.sunset.innerHTML = getTime(sunset);
         el.prec.innerHTML = res.daily[0].rain;
         el.pop.innerHTML = res.daily[0].pop * 100;
-        console.log("prec", res.current.rain, "pop", res);
         const tempUnit = getSettings().freedom ? "F" : "C";
         const unitElements = document.getElementsByClassName("tempFormat");
         [].slice.call(unitElements).forEach(function (el) {
