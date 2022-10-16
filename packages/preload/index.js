@@ -160,6 +160,8 @@ domReady().then(() => {
         const sunrise = document.getElementById("sunrise");
         const sunset = document.getElementById("sunset");
         const tempFormat = document.getElementsByClassName("tempFormat");
+        const prec = document.getElementById("prec");
+        const pop = document.getElementById("pop");
 
         const forecast = [];
         for (let index = 0; index < days; index++) {
@@ -185,6 +187,8 @@ domReady().then(() => {
             sunset,
             forecast,
             tempFormat,
+            prec,
+            pop,
         };
     };
 
@@ -214,6 +218,9 @@ domReady().then(() => {
         el.updatedAt.innerHTML = getTime(updatedAt);
         el.sunrise.innerHTML = getTime(sunrise);
         el.sunset.innerHTML = getTime(sunset);
+        el.prec.innerHTML = res.daily[0].rain;
+        el.pop.innerHTML = res.daily[0].pop * 100;
+        console.log("prec", res.current.rain, "pop", res);
         const tempUnit = getSettings().freedom ? "F" : "C";
         const unitElements = document.getElementsByClassName("tempFormat");
         [].slice.call(unitElements).forEach(function (el) {
@@ -325,7 +332,13 @@ domReady().then(() => {
         const warningEl = document.getElementById("warning");
         timeConsole("Calling API for " + city + " with url " + url);
         await fetch(url)
-            .then((response) => response.json())
+            .then((res) => {
+                if (!res.ok)
+                    return res.text().then((text) => {
+                        throw new Error(text);
+                    });
+                else return res.json();
+            })
             .then((result) => {
                 setData(getElements(days), result);
                 timeConsole("Got data", result);

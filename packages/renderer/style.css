@@ -41,7 +41,7 @@ h5 {
 }
 
 h6 {
-    line-height: 1.4;
+    line-height: 1;
     font-weight: 400;
 }
 
@@ -155,7 +155,7 @@ a:hover {
     padding: 2em;
 }
 
-.read-the-docs {
+.grey {
     color: #888;
 }
 
@@ -240,7 +240,8 @@ a:hover {
 }
 
 #current {
-    width: 65%;
+    width: 60%;
+    padding: 0.3em 0.3em;
 }
 #current img {
     height: 70px;
@@ -254,9 +255,10 @@ a:hover {
 }
 
 #details {
-    width: 34%;
+    width: 50%;
     padding: 0.3em 0.3em;
     margin-top: 1em;
+    line-height: 1.2;
 }
 
 #forecast {
@@ -327,4 +329,27 @@ a:hover {
 
 .vertical-center {
     margin: auto 0 !important;
+}
+
+#hilow {
+    width: 90%;
+    position: absolute;
+    top: 10px;
+}
+
+.high {
+    color: #f08787;
+}
+
+.low {
+    color: #aeaeff;
+}
+
+.precipitation {
+    line-height: 0.8;
+}
+
+.precipitation h6 {
+    color: rgb(158, 158, 158);
+    margin-top: 1px;
 }

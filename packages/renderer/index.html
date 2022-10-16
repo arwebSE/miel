@@ -57,15 +57,15 @@
                                 <h3 id="condition">Clear</h3>
                                 <h1><span id="temp"></span>&deg;<span class="tempFormat">C</span></h1>
                             </div>
-                            <div class="vertical-center">
-                                <h6>
-                                    <i class="fa-solid fa-arrow-up"></i> <span id="cMax">?</span>&deg;<span
+                            <div id="hilow" class="vertical-center">
+                                <h6 class="high">
+                                    <i class="fa-solid fa-arrow-up fa-xs"></i> <span id="cMax">?</span>&deg;<span
                                         class="tempFormat"
                                         >C</span
                                     >
                                 </h6>
-                                <h6>
-                                    <i class="fa-solid fa-arrow-down"></i> <span id="cMin">?</span>&deg;<span
+                                <h6 class="low">
+                                    <i class="fa-solid fa-arrow-down fa-xs"></i> <span id="cMin">?</span>&deg;<span
                                         class="tempFormat"
                                         >C</span
                                     >
@@ -73,20 +73,20 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h5 id="city" class="center read-the-docs">City</h5>
+                            <h5 id="city" class="center grey">City</h5>
                         </div>
                     </div>
                     <div class="col" id="details">
                         <div class="row">
-                            <h5 class="left read-the-docs">Feels like</h5>
+                            <h5 class="left grey">Feels like</h5>
                             <h5 class="right"><span id="feel"></span>&deg;<span class="tempFormat">C</span></h5>
                         </div>
                         <div class="row">
-                            <h5 class="left read-the-docs">Humidity</h5>
+                            <h5 class="left grey">Humidity</h5>
                             <h5 class="right"><span id="humidity"></span>%</h5>
                         </div>
                         <div class="row">
-                            <h5 class="left read-the-docs">Sunrise</h5>
+                            <h5 class="left grey">Sunrise</h5>
                             <div>
                                 <div class="icons right">
                                     <i class="fa-solid fa-sun fa-2xs"></i>
@@ -96,13 +96,23 @@
                             </div>
                         </div>
                         <div class="row">
-                            <h5 class="left read-the-docs">Sunset</h5>
+                            <h5 class="left grey">Sunset</h5>
                             <div>
                                 <div class="icons right">
                                     <i class="fa-solid fa-sun fa-2xs"></i>
                                     <i class="fa-solid fa-arrow-down fa-2xs"></i>
                                 </div>
                                 <h5 id="sunset" class="right">?</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <h5 class="left grey">Precipitation</h5>
+                            <div class="precipitation">
+                                <div class="icons right">
+                                    <i class="fa-solid fa-umbrella fa-xs"></i>
+                                </div>
+                                <h5 class="right"><span id="prec">1</span>mm</h5>
+                                <h6 class="right">(<span id="pop">0</span>%)</h6>
                             </div>
                         </div>
                     </div>
