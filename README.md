@@ -8,6 +8,7 @@ This application makes calls to a backend API, https://github.com/arwebSE/miel-a
 
 ![main window](https://i.imgur.com/9euSA5o.png)
 ![settings](https://i.imgur.com/nFEJayH.png)
+![windows 11](https://i.imgur.com/9OKMxJs.png)
 
 # installation (windows)
 
