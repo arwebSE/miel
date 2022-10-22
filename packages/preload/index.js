@@ -219,7 +219,7 @@ domReady().then(() => {
         el.sunrise.innerHTML = getTime(sunrise);
         el.sunset.innerHTML = getTime(sunset);
         el.prec.innerHTML = res.daily[0].rain;
-        el.pop.innerHTML = res.daily[0].pop * 100;
+        el.pop.innerHTML = Math.round(res.daily[0].pop * 100);
         const tempUnit = getSettings().freedom ? "F" : "C";
         const unitElements = document.getElementsByClassName("tempFormat");
         [].slice.call(unitElements).forEach(function (el) {
