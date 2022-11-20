@@ -347,9 +347,12 @@ a:hover {
 
 .precipitation {
     line-height: 0.8;
+    font-size: smaller;
 }
 
 .precipitation h6 {
     color: rgb(158, 158, 158);
     margin-top: 1px;
+    font-size: xx-small;
+    line-height: 0.8;
 }
