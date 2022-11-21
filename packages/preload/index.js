@@ -299,7 +299,7 @@ domReady().then(() => {
             };
             timeConsole("Sending data to ipcMain", newSettings);
             ipcRenderer.send("saveSettings", newSettings);
-            autoRefresh({ city: newSettings.city, reason: "Settings" });
+            autoRefresh({ city: newSettings.city, reason: "Settings", freedom: newSettings.freedom });
             toggleSettings();
         });
 
@@ -322,10 +322,12 @@ domReady().then(() => {
         });
     };
 
-    const callAPI = async (city) => {
+    const callAPI = async (params) => {
+        const city = params.city || getSettings().city;
+        let freedom = getSettings().freedom;
+        if(params.freedom !== "undefined") freedom = params.freedom;
         const days = 7;
         const verify = "5ecf486e3b8d878a4a87";
-        const freedom = getSettings().freedom;
         const id = uuid();
         const url = `${apiUrl}/weather?q=${city}&verify=${verify}&freedom=${freedom}&id=${id}`;
         const warningEl = document.getElementById("warning");
@@ -383,7 +385,7 @@ domReady().then(() => {
         appendLoading();
         if (params.reason) timeConsole(params.reason, "refresh...");
         else timeConsole("Manual refresh...");
-        await callAPI(params.city || getSettings().city);
+        await callAPI(params);
         removeLoading();
     };
 
