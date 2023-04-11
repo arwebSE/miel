@@ -1,6 +1,6 @@
 const os = require("os");
 const { join } = require("path");
-const { app, BrowserWindow, ipcMain, screen, session } = require("electron");
+const { app, BrowserWindow, ipcMain, screen, session, Tray, Menu } = require("electron");
 const { setVibrancy } = require("electron-acrylic-window");
 const Store = require("electron-store");
 const store = new Store();
@@ -16,11 +16,6 @@ if (!app.requestSingleInstanceLock()) {
     process.exit(0);
 }
 
-const ROOT_PATH = {
-    dist: join(__dirname, "../.."),
-    public: join(__dirname, app.isPackaged ? "../.." : "../../../public"),
-};
-
 const timeConsole = (...args) => {
     const d = new Date();
     console.log(`[${d.toLocaleTimeString()}]`, ...args);
@@ -28,17 +23,41 @@ const timeConsole = (...args) => {
 
 let win = null;
 
+// vite dev server url
+const VITE_URL = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
+
+let PUB_PATH = join(__dirname, "../../public");
+const MODE = app.isPackaged ? "PRODUCTION" : args.inspect ? "DEBUG" : "DEV";
+switch (MODE) {
+    case "DEV":
+        timeConsole("Running in DEV MODE");
+        PUB_PATH = VITE_URL;
+        break;
+    case "PRODUCTION":
+        timeConsole("Running in PRODUCTION");
+        PUB_PATH = join(__dirname, "../..");
+        break;
+    case "DEBUG":
+        timeConsole("Running in DEBUG MODE");
+        PUB_PATH = join(__dirname, "../../public");
+        break;
+    default:
+        break;
+}
+
+const ROOT_PATH = {
+    dist: join(__dirname, "../.."),
+    public: PUB_PATH,
+};
+
+console.log("public path", ROOT_PATH.public);
+
 const createWindow = async () => {
     const display = screen.getPrimaryDisplay();
-    /* const displays = screen.getAllDisplays();
-    const extDisplay = displays.find((display) => {
-        return display.bounds.x !== 0 || display.bounds.y !== 0;
-    }); */
     const dWidth = display.bounds.width;
     const dHeight = display.bounds.height;
     const winWidth = 361;
     const winHeight = 210;
-
     const winConfig = {
         title: "Main window",
         width: winWidth,
@@ -64,11 +83,6 @@ const createWindow = async () => {
 
     setAutoStart();
 
-    /* if (extDisplay) {
-        winConfig.x = extDisplay.bounds.width - dWidth - 88;
-        winConfig.y = extDisplay.bounds.y + winHeight - 88;
-    } */
-
     win = new BrowserWindow(winConfig);
 
     // Test actively push message to the Electron-Renderer
@@ -78,29 +92,15 @@ const createWindow = async () => {
         setAlwaysOnTop();
     });
 
-    const devTools = () => {
-        // DevTools
-        const devtools = new BrowserWindow();
-        win.webContents.setDevToolsWebContents(devtools.webContents);
-        win.webContents.openDevTools({ mode: "detach" });
-        const winBounds = win.getBounds();
-        devtools.setPosition(winBounds.x - winBounds.width, winBounds.y - winBounds.height * 2);
-        devtools.setSize(winBounds.width * 2, winBounds.height * 2);
-        devtools.setAlwaysOnTop(true);
-    };
-
-    if (args.inspect) {
-        win.loadFile(join(__dirname, "../renderer/index.html"));
-        timeConsole("Running in DEBUG MODE");
+    // OPEN DEVTOOLS ON START
+    if (MODE === "DEV") {
+        win.loadURL(VITE_URL);
         devTools();
-    } else if (app.isPackaged) {
-        win.loadFile(join(__dirname, "../renderer/index.html"));
-        timeConsole("Running in PRODUCTION");
     } else {
-        const url = `http://${process.env["VITE_DEV_SERVER_HOST"]}:${process.env["VITE_DEV_SERVER_PORT"]}`;
-        win.loadURL(url);
-        timeConsole("Running in DEV MODE");
-        devTools();
+        win.loadFile(join(__dirname, "../renderer/index.html"));
+        if (MODE === "DEBUG") {
+            devTools();
+        }
     }
 
     /* session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
@@ -113,7 +113,21 @@ const createWindow = async () => {
     }); */
 };
 
-app.whenReady().then(createWindow);
+const devTools = () => {
+    // DevTools
+    const devtools = new BrowserWindow();
+    win.webContents.setDevToolsWebContents(devtools.webContents);
+    win.webContents.openDevTools({ mode: "detach" });
+    const winBounds = win.getBounds();
+    devtools.setPosition(winBounds.x - winBounds.width, winBounds.y - winBounds.height * 2);
+    devtools.setSize(winBounds.width * 2, winBounds.height * 2);
+    devtools.setAlwaysOnTop(true);
+};
+
+app.whenReady().then(() => {
+    createWindow();
+    createTray();
+});
 
 app.on("window-all-closed", () => {
     win = null;
@@ -157,6 +171,56 @@ const setAlwaysOnTop = (alwaysOnTop = getSettings().alwaysOnTop) => {
     if (win) {
         win.setAlwaysOnTop(alwaysOnTop, "screen-saver");
     }
+};
+
+// system tray icon
+const createTray = () => {
+    const trayIconPath =  join(ROOT_PATH.public + "/icon.png").replace(/\/{2,}/, '/');
+    console.log("trayIconPath", trayIconPath);
+    const tray = new Tray(trayIconPath);
+    tray.setToolTip("miEl");
+
+    tray.on("click", () => {
+        win.show();
+    });
+    // show menu on right click
+    tray.on("right-click", () => {
+        const menuConfig = buildTrayMenu();
+        tray.popUpContextMenu(menuConfig);
+    });
+};
+
+const buildTrayMenu = () => {
+    return Menu.buildFromTemplate([
+        {
+            label: "Show",
+            click: () => {
+                win.show();
+            },
+        },
+        // about window
+        {
+            label: "About",
+            click: () => {
+                const aboutPath = join(ROOT_PATH.public, "/about.html");
+                console.log("aboutPath", aboutPath);
+                const aboutWindow = new BrowserWindow({
+                    width: 400,
+                    height: 400,
+                    webPreferences: {
+                        nodeIntegration: true,
+                    },
+                });
+                aboutWindow.loadFile(aboutPath);
+            },
+        },
+        {
+            label: "Quit",
+            click: () => {
+                app.quit();
+            },
+        },
+    ]);
 };
 
 // theme
@@ -242,4 +306,9 @@ ipcMain.on("saveSettings", (_event, settings) => {
 
 ipcMain.on("exit", (_event, _arg) => {
     app.quit();
+});
+
+ipcMain.on("minimize", (_event, _arg) => {
+    //win.minimize();
+    win.hide();
 });

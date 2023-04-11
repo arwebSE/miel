@@ -59,7 +59,8 @@ a:hover {
 }
 
 #settings,
-#exit {
+#exit,
+#minimize {
     -webkit-app-region: no-drag;
     margin: 0;
     padding: 0;
@@ -85,8 +86,13 @@ a:hover {
     top: 7px;
     right: 7px;
 }
+#minimize {
+    top: 7px;
+    right: 55px;
+}
 #settings i,
-#exit i {
+#exit i,
+#minimize i {
     padding: auto;
     margin: auto;
 }
@@ -96,8 +102,12 @@ a:hover {
 #exit:hover {
     border-color: #913434;
 }
+#minimize:hover {
+    border-color: #909134;
+}
 #settings:focus,
-#exit:focus {
+#exit:focus,
+#minimize:focus {
     outline: none;
 }
 

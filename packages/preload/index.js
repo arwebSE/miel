@@ -269,6 +269,7 @@ domReady().then(() => {
         const alwaysOnTop = document.getElementById("alwaysOnTop");
         const format24 = document.getElementById("format24");
         const freedom = document.getElementById("freedom");
+        const minimizeButton = document.getElementById("minimize");
         const saveButton = document.getElementById("saveSettings");
         const exitButton = document.getElementById("exit");
         const theme = document.getElementById("theme");
@@ -314,6 +315,11 @@ domReady().then(() => {
         // exit on pressing X
         exitButton.addEventListener("click", () => {
             ipcRenderer.send("exit");
+        });
+
+        // minimize on pressing -
+        minimizeButton.addEventListener("click", () => {
+            ipcRenderer.send("minimize");
         });
 
         const updated = document.getElementById("updated");
