@@ -28,5 +28,6 @@
     "env": {
         "VITE_DEV_SERVER_HOST": "127.0.0.1",
         "VITE_DEV_SERVER_PORT": 9999
-    }
+    },
+    "packageManager": "yarn@1.22.19"
 }
